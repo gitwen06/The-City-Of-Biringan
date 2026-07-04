@@ -218,6 +218,8 @@ namespace StarterAssets
 					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 				}
 
+				//test for update haha 
+
 				// jump timeout
 				if (_jumpTimeoutDelta >= 0.0f)
 				{
