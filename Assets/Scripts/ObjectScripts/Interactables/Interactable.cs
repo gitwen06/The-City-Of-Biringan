@@ -20,6 +20,7 @@ public class Interactable : MonoBehaviour
     public void Interact()
     {
         onInteract.Invoke();
+        Debug.Log("Interacted with: " + gameObject.name);
     }
 
     public void EnableOutline()

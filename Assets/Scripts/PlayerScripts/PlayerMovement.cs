@@ -91,7 +91,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (IsGrounded())
         {
-            rb.AddForce(Vector3.up * 50f, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * 3f, ForceMode.Impulse);
         }
     }
 
