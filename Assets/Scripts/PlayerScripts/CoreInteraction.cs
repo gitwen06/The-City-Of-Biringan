@@ -4,14 +4,19 @@ public class CoreInteraction : MonoBehaviour
 {
     public float playerReach = 3.0f;
     Interactable currentInteractable;
+    DoorController currentDoor;
     [SerializeField] private Camera playerCamera;
 
     private InputSystem_Actions inputActions;
 
-
     private void Awake()
     {
         inputActions = new InputSystem_Actions();
+    }
+
+    private void Start()
+    {
+        HUDController.instance.DisableInteractionText();
     }
     private void OnEnable()
     {
@@ -25,10 +30,18 @@ public class CoreInteraction : MonoBehaviour
     private void Update()
     {
         CheckInteraction();
-        if(inputActions.Player.Interact.WasPressedThisFrame() && currentInteractable != null)
+        if (inputActions.Player.Interact.WasPressedThisFrame())
         {
-            currentInteractable.Interact();
-            Debug.Log("workds");
+            if (currentInteractable != null)
+            {
+                currentInteractable.Interact();
+                Debug.Log("Interactable interacted");
+            }
+            else if (currentDoor != null)
+            {
+                currentDoor.ToggleDoor();
+                Debug.Log("Door toggled");
+            }
         }
     }
 
@@ -37,52 +50,78 @@ public class CoreInteraction : MonoBehaviour
         RaycastHit hit;
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
 
-        if(Physics.Raycast(ray, out hit, playerReach)) 
+        if (Physics.Raycast(ray, out hit, playerReach))
         {
-            if(hit.collider.tag == "Interactable")
+            if (hit.collider.CompareTag("Interactable"))
             {
                 Interactable newInteractable = hit.collider.GetComponent<Interactable>();
 
-                if (newInteractable.enabled)
+                if (newInteractable != null && newInteractable.enabled)
                 {
+                    DisableCurrentDoor();
                     SetNewCurrentInteractable(newInteractable);
+                    return;
                 }
-                // if interactable is disabled, disable the current interactable
-                else
+            }
+            else if (hit.collider.CompareTag("isDoor"))
+            {
+                DoorController door = hit.collider.GetComponent<DoorController>();
+
+                if (door != null)
                 {
                     DisableCurrentInteractable();
+                    SetNewCurrentDoor(door);
+                    return;
                 }
             }
-            //if not an interactable, disable the current interactable
-            else
-            {
-                DisableCurrentInteractable();
-            }
         }
-        // if not hitting anything, disable the current interactable
-        else
-        {
-            DisableCurrentInteractable();
-        }
+
+        // Nothing valid is being looked at: ray missed entirely, hit an
+        // unrelated collider, or hit a disabled/component-less target.
+        // Clear both focuses every time we land here.
+        DisableCurrentInteractable();
+        DisableCurrentDoor();
     }
 
     void SetNewCurrentInteractable(Interactable newInteractable)
     {
+        if (currentInteractable == newInteractable) return;
+
         currentInteractable = newInteractable;
         currentInteractable.EnableOutline();
-        HUDController.instance.EnableInteractionText();
+        if (HUDController.instance != null)
+            HUDController.instance.ShowInteractionText();
+    }
+
+    void SetNewCurrentDoor(DoorController door)
+    {
+        if (currentDoor == door) return;
+
+        currentDoor = door;
+        currentDoor.EnableOutline();
+        if (HUDController.instance != null)
+            HUDController.instance.ShowInteractionText();
     }
 
     void DisableCurrentInteractable()
     {
-        HUDController.instance.DisableInteractionText();
-        if (currentInteractable)
+        if (currentInteractable != null)
         {
             currentInteractable.DisableOutline();
             currentInteractable = null;
+            if (HUDController.instance != null)
+                HUDController.instance.DisableInteractionText();
         }
     }
 
-
-
+    void DisableCurrentDoor()
+    {
+        if (currentDoor != null)
+        {
+            currentDoor.DisableOutline();
+            currentDoor = null;
+            if (HUDController.instance != null)
+                HUDController.instance.DisableInteractionText();
+        }
+    }
 }

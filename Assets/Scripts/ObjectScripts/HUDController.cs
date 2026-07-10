@@ -4,7 +4,7 @@ using TMPro;
 public class HUDController : MonoBehaviour
 {
     public static HUDController instance;
-    
+
     void Awake()
     {
         instance = this;
@@ -12,10 +12,11 @@ public class HUDController : MonoBehaviour
 
     [SerializeField] private TMP_Text interactionText;
 
-    public void EnableInteractionText()
+    public void ShowInteractionText()
     {
         interactionText.gameObject.SetActive(true);
     }
+
     public void DisableInteractionText()
     {
         interactionText.gameObject.SetActive(false);

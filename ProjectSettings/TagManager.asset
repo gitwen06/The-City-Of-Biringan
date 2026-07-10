@@ -6,6 +6,7 @@ TagManager:
   tags:
   - CinemachineTarget
   - Interactable
+  - isDoor
   layers:
   - Default
   - TransparentFX

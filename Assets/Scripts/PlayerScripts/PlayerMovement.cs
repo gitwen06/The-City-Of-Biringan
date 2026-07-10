@@ -1,5 +1,9 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
+using UnityEngine.UI;
+
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -7,23 +11,45 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveSpeed = 5.0f;
 
     [Header("Look")]
+    [SerializeField] private Camera playerCamera;
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform playerFlashlight;
+    [SerializeField] private Slider playerHealth;
+    [SerializeField] private Slider playerStamina;
+    [SerializeField] private float cameraFOVChangeRate = 1.25f;
+    [SerializeField] private float staminaDrainRate = 15.5f;
+    [SerializeField] private float staminaRegenRate = 12.5f;
     [SerializeField] private float mouseSensitivity = 0.1f;
     [SerializeField] private float minPitch = -80f;
     [SerializeField] private float maxPitch = 80f;
     private float pitch = 0f;
+
+    [Header("Stamina")]
+    [Tooltip("Maximum stamina value shown in the UI slider")]
+    [SerializeField] private float maxStamina = 100f;
+    [Tooltip("Seconds to wait after sprinting before stamina begins to regenerate")]
+    [SerializeField] private float staminaRegenDelay = 1.2f;
+    [Tooltip("Minimum stamina required to resume sprinting after exhaustion")]
+    [SerializeField] private float exhaustionRecoveryThreshold = 15f;
+    private float currentStamina;
+    private bool isExhausted = false;
+    private float regenDelayTimer = 0f;
 
     [Header("Crouch")]
     [SerializeField] private float standHeight = 2f;
     [SerializeField] private float crouchHeight = 1f;
     private CapsuleCollider capsule;
     private bool isCrouching = false;
+    private bool isRunning = false;
+
+
 
     private InputSystem_Actions inputActions;
     private Rigidbody rb;
     private Vector2 moveInput;
     private Vector2 lookInput;
+    private Vector3 move;
+
 
     private void Awake()
     {
@@ -55,8 +81,14 @@ public class PlayerMovement : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-    }
 
+        // initialize stamina
+        currentStamina = maxStamina;
+        if (playerStamina != null)
+        {
+            playerStamina.value = currentStamina;
+        }
+    }
     private void Update()
     {
         moveInput = inputActions.Player.Move.ReadValue<Vector2>();
@@ -74,11 +106,64 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        bool isRunning = inputActions.Player.Sprint.IsPressed();
+        // determine desired sprint input
+        bool wantsToSprint = inputActions.Player.Sprint.IsPressed();
+
+        // disable sprinting while exhausted
+        isRunning = wantsToSprint && !isExhausted && moveInput != Vector2.zero;
+
         float currentSpeed = isRunning ? moveSpeed * 2.0f : moveSpeed;
 
+        // handle stamina drain when actually sprinting (and moving)
+        if (isRunning)
+        {
+            // reset regen delay while sprinting
+            regenDelayTimer = staminaRegenDelay;
 
-        Vector3 move = (transform.right * moveInput.x + transform.forward * moveInput.y) * currentSpeed * Time.fixedDeltaTime;
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 75f, cameraFOVChangeRate * Time.fixedDeltaTime);
+            currentStamina -= staminaDrainRate * Time.fixedDeltaTime;
+            if (currentStamina <= 0f)
+            {
+                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 60f, cameraFOVChangeRate * Time.fixedDeltaTime);
+                currentStamina = 0f;
+                isExhausted = true;
+                // give a slightly longer delay after exhaustion
+                regenDelayTimer = staminaRegenDelay + 0.5f;
+            }
+        }
+        else
+        {
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 60f, cameraFOVChangeRate * Time.fixedDeltaTime);
+            // not sprinting: count down delay then regenerate
+            if (regenDelayTimer > 0f)
+            {
+                regenDelayTimer -= Time.fixedDeltaTime;
+            }
+            else
+            {
+                currentStamina += staminaRegenRate * Time.fixedDeltaTime;
+                if (currentStamina >= maxStamina)
+                {
+                    currentStamina = maxStamina;
+                }
+
+                // recover from exhaustion when we have enough stamina
+                if (isExhausted && currentStamina >= exhaustionRecoveryThreshold)
+                {
+                    isExhausted = false;
+                }
+            }
+        }
+
+        // clamp and apply to UI
+        currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+        if (playerStamina != null)
+        {
+            playerStamina.value = currentStamina;
+        }
+
+        // move the player
+        move = (transform.right * moveInput.x + transform.forward * moveInput.y) * currentSpeed * Time.fixedDeltaTime;
         rb.MovePosition(rb.position + move);
     }
 
@@ -91,7 +176,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (IsGrounded())
         {
-            rb.AddForce(Vector3.up * 8f, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * 12f, ForceMode.Impulse);
         }
     }
 
