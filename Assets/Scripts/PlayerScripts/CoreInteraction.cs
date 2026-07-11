@@ -1,10 +1,16 @@
 using UnityEngine;
 
+public interface Iinteractable
+{
+    void Interact();
+    void EnableOutline();
+    void DisableOutline();
+}
+
 public class CoreInteraction : MonoBehaviour
 {
     public float playerReach = 3.0f;
-    Interactable currentInteractable;
-    DoorController currentDoor;
+    Iinteractable currentInteractable;
     [SerializeField] private Camera playerCamera;
 
     private InputSystem_Actions inputActions;
@@ -18,6 +24,7 @@ public class CoreInteraction : MonoBehaviour
     {
         HUDController.instance.DisableInteractionText();
     }
+
     private void OnEnable()
     {
         inputActions.Player.Enable();
@@ -27,6 +34,7 @@ public class CoreInteraction : MonoBehaviour
     {
         inputActions.Player.Disable();
     }
+
     private void Update()
     {
         CheckInteraction();
@@ -35,12 +43,7 @@ public class CoreInteraction : MonoBehaviour
             if (currentInteractable != null)
             {
                 currentInteractable.Interact();
-                Debug.Log("Interactable interacted");
-            }
-            else if (currentDoor != null)
-            {
-                currentDoor.ToggleDoor();
-                Debug.Log("Door toggled");
+                Debug.Log("Interacted");
             }
         }
     }
@@ -52,53 +55,25 @@ public class CoreInteraction : MonoBehaviour
 
         if (Physics.Raycast(ray, out hit, playerReach))
         {
-            if (hit.collider.CompareTag("Interactable"))
-            {
-                Interactable newInteractable = hit.collider.GetComponent<Interactable>();
+            Iinteractable newInteractable = hit.collider.GetComponent<Iinteractable>();
 
-                if (newInteractable != null && newInteractable.enabled)
-                {
-                    DisableCurrentDoor();
-                    SetNewCurrentInteractable(newInteractable);
-                    return;
-                }
-            }
-            else if (hit.collider.CompareTag("isDoor"))
+            if (newInteractable != null)
             {
-                DoorController door = hit.collider.GetComponent<DoorController>();
-
-                if (door != null)
-                {
-                    DisableCurrentInteractable();
-                    SetNewCurrentDoor(door);
-                    return;
-                }
+                SetNewCurrentInteractable(newInteractable);
+                return;
             }
         }
 
-        // Nothing valid is being looked at: ray missed entirely, hit an
-        // unrelated collider, or hit a disabled/component-less target.
-        // Clear both focuses every time we land here.
         DisableCurrentInteractable();
-        DisableCurrentDoor();
     }
 
-    void SetNewCurrentInteractable(Interactable newInteractable)
+    void SetNewCurrentInteractable(Iinteractable newInteractable)
     {
         if (currentInteractable == newInteractable) return;
 
+        DisableCurrentInteractable();
         currentInteractable = newInteractable;
         currentInteractable.EnableOutline();
-        if (HUDController.instance != null)
-            HUDController.instance.ShowInteractionText();
-    }
-
-    void SetNewCurrentDoor(DoorController door)
-    {
-        if (currentDoor == door) return;
-
-        currentDoor = door;
-        currentDoor.EnableOutline();
         if (HUDController.instance != null)
             HUDController.instance.ShowInteractionText();
     }
@@ -109,17 +84,6 @@ public class CoreInteraction : MonoBehaviour
         {
             currentInteractable.DisableOutline();
             currentInteractable = null;
-            if (HUDController.instance != null)
-                HUDController.instance.DisableInteractionText();
-        }
-    }
-
-    void DisableCurrentDoor()
-    {
-        if (currentDoor != null)
-        {
-            currentDoor.DisableOutline();
-            currentDoor = null;
             if (HUDController.instance != null)
                 HUDController.instance.DisableInteractionText();
         }

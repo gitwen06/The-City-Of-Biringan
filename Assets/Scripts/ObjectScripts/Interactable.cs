@@ -1,7 +1,8 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Interactable : MonoBehaviour
+public class Interactable : MonoBehaviour, Iinteractable
 {
     Outline outline;
     public string text;
@@ -15,7 +16,6 @@ public class Interactable : MonoBehaviour
         DisableOutline();
         
     }
-
     // Update is called once per frame
     public void Interact()
     {

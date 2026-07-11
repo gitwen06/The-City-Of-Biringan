@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class DoorController : MonoBehaviour
+public class DoorController : MonoBehaviour, Iinteractable
 {
     private Animator animator;
     private bool isDoorOpen = false;
@@ -16,7 +16,7 @@ public class DoorController : MonoBehaviour
     }
 
     // Call this method via player interaction system (Raycast, Trigger, or UI button)
-    public void ToggleDoor()
+    public void Interact()
     {
         isDoorOpen = !isDoorOpen;
 
