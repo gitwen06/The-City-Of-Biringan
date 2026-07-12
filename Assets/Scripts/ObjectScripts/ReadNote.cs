@@ -1,5 +1,4 @@
 using UnityEngine;
-using TMPro;
 
 public class ReadNote : MonoBehaviour, Iinteractable
 {
@@ -9,12 +8,15 @@ public class ReadNote : MonoBehaviour, Iinteractable
     void Start()
     {
         outline = GetComponent<Outline>();
-        
+        if (outline != null) outline.enabled = false;
     }
 
     public void Interact()
     {
-        HUDController.instance.SerializeNoteText(text);
+        // Open the note UI. NoteController will handle cursor and freezing.
+        NoteController.instance.SetText(text, true);
+        HUDController.instance.hideUINote();
+
     }
 
     public void EnableOutline()
@@ -25,11 +27,5 @@ public class ReadNote : MonoBehaviour, Iinteractable
     public void DisableOutline()
     {
         outline.enabled = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

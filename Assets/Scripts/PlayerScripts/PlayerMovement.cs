@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -49,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Vector2 lookInput;
     private Vector3 move;
+    private bool isFrozen = false;
 
 
     private void Awake()
@@ -77,6 +79,17 @@ public class PlayerMovement : MonoBehaviour
         inputActions.Player.Disable();
     }
 
+    // Freeze/unfreeze player input and movement
+    public void FreezeInput()
+    {
+        isFrozen = true;
+    }
+
+    public void UnfreezeInput()
+    {
+        isFrozen = false;
+    }
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -91,6 +104,11 @@ public class PlayerMovement : MonoBehaviour
     }
     private void Update()
     {
+        if (isFrozen)
+        {
+            // while frozen, ignore input and do not modify stamina or movement
+            return;
+        }
         moveInput = inputActions.Player.Move.ReadValue<Vector2>();
         lookInput = inputActions.Player.Look.ReadValue<Vector2>();
 
@@ -106,6 +124,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isFrozen)
+        {
+            // while frozen, ignore physics and stamina/FOV updates
+            return;
+        }
         // determine desired sprint input
         bool wantsToSprint = inputActions.Player.Sprint.IsPressed();
 
@@ -169,7 +192,8 @@ public class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down, capsule.bounds.extents.y + 0.1f);
+        //is frozen return false, not return true
+        return isFrozen ? false : Physics.Raycast(transform.position, Vector3.down, capsule.bounds.extents.y + 0.1f);
     }
 
     private void OnJumpPerformed(InputAction.CallbackContext context)

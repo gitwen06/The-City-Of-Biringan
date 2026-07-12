@@ -1,10 +1,14 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class HUDController : MonoBehaviour
 {
     public static HUDController instance;
 
+    [SerializeField] private Image cursor;
+    [SerializeField] private GameObject health;
+    [SerializeField] private GameObject stamina;
 
     void Awake()
     {
@@ -13,17 +17,26 @@ public class HUDController : MonoBehaviour
 
     [SerializeField] private TMP_Text interactionText;
 
-
-    public void SerializeNoteText(string text)
+    public void hideUINote ()
     {
-        NoteController.instance.SetText(text);
+        cursor.enabled = false;
+        health.SetActive(false);
+        stamina.SetActive(false);
     }
 
+    public void showUiNote()
+    {
+        cursor.enabled = true;
+        health.SetActive(true);
+        stamina.SetActive(true);
+    }
 
     public void ShowInteractionText()
     {
         interactionText.gameObject.SetActive(true);
     }
+
+
 
     public void DisableInteractionText()
     {

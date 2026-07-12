@@ -6,7 +6,6 @@ public class DoorController : MonoBehaviour, Iinteractable
     private bool isDoorOpen = false;
     private Outline outline;
 
-
     void Start()
     {
         // Get the Animator component attached to the pivot object
