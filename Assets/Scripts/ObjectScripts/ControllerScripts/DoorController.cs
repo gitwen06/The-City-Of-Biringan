@@ -6,6 +6,7 @@ public class DoorController : MonoBehaviour, Iinteractable
     private bool isDoorOpen = false;
     private Outline outline;
 
+    public bool doorLocked = false;
     void Start()
     {
         // Get the Animator component attached to the pivot object
@@ -17,10 +18,23 @@ public class DoorController : MonoBehaviour, Iinteractable
     // Call this method via player interaction system (Raycast, Trigger, or UI button)
     public void Interact()
     {
-        isDoorOpen = !isDoorOpen;
+        if(!doorLocked)
+        {
+            isDoorOpen = !isDoorOpen;
 
-        // Update the Animator parameter to shift states
-        animator.SetBool("isOpen", isDoorOpen);
+            // Update the Animator parameter to shift states
+            animator.SetBool("isOpen", isDoorOpen);
+        }
+        else
+        {
+            Debug.Log("Door is locked!");
+        }
+        
+    }
+
+    public void unlockDoor()
+    {
+        
     }
 
     public void EnableOutline()
