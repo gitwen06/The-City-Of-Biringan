@@ -7,4 +7,5 @@ public class ItemScriptableObject : ScriptableObject
     public string id;
     public Sprite Icon;
     public string description;
+    public int maxStackSize;
 }

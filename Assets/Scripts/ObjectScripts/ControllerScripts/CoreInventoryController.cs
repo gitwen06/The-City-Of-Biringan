@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
@@ -12,6 +13,11 @@ public class CoreInventoryController : MonoBehaviour
 
     [SerializeField] private Sprite placeholderImage;
 
+    public static CoreInventoryController instance; //singleton 
+
+    private UnityEvent onTabPressed; //for opening main inventory
+    private InputSystem_Actions inputActions;
+
     private int toolbarSlots = 7;
     private int mainInventroySlots = 7;
 
@@ -20,6 +26,9 @@ public class CoreInventoryController : MonoBehaviour
 
     private void Awake()
     {
+        inputActions = new InputSystem_Actions();
+        instance = this;
+
         //get all the images in the toolbar and main inventory and add them to the itemUIList of toolbar
         Image[] toolbarImages = Toolbar.GetComponentsInChildren<Image>();
 
@@ -44,22 +53,62 @@ public class CoreInventoryController : MonoBehaviour
 
     }
 
+    public void Start()
+    {
+        UpdateInventoryUI();
+    }
+
+    public void Update()
+    {
+        if (inputActions.Player.OpenInventory.WasPressedThisFrame())
+        {
+            onTabPressed.Invoke();
+        }
+    }
+
+    public void OnEnable()
+    {
+        inputActions.Player.Enable();
+
+    }
+
+    public void OnDisable()
+    {
+        inputActions.Player.Disable();
+    }
+
     public void AddItem(ItemScriptableObject item, int quantity)
     {
-        // Check if the item already exists in the inventory
-        InventorySlot existingSlot = itemList.Find(slot => slot.item == item);
-        if (existingSlot != null)
+        int remaining = quantity; //how much of the item we still need to add to the inventory
+
+        for (int i = 0; i < itemList.Count; i++)
         {
-            // If the item exists, increase the quantity
-            existingSlot.quantity += quantity;
+            if (itemList[i].item == item && itemList[i].quantity < item.maxStackSize)
+            {
+                int room = item.maxStackSize - itemList[i].quantity;
+                int amountToAdd = Mathf.Min(room, remaining); //return which one is smaller
+                itemList[i].quantity += amountToAdd;
+                remaining -= amountToAdd;
+                if(remaining <= 0)
+                {
+                    UpdateInventoryUI();
+                    return;
+                }
+            }
         }
-        else
+        while (remaining > 0)
         {
-            // If the item doesn't exist, create a new slot and add it to the inventory
+            if(itemList.Count >= 14)
+            {
+                Debug.Log("Inventory full");
+                break;
+            }
+
             InventorySlot newSlot = new InventorySlot();
             newSlot.item = item;
-            newSlot.quantity = quantity;
+            newSlot.quantity = Mathf.Min(remaining, item.maxStackSize); //for items that come in batch(e.g coins, 3)
             itemList.Add(newSlot);
+            remaining -= newSlot.quantity;
         }
         UpdateInventoryUI();
     }
