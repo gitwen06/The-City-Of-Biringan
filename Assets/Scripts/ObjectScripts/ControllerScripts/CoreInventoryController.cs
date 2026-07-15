@@ -10,6 +10,7 @@ public class CoreInventoryController : MonoBehaviour
 {
     [SerializeField] private GameObject Toolbar;
     [SerializeField] private GameObject MainInventory;
+    [SerializeField] private TMP_Text cursorText;
 
     [SerializeField] private Sprite placeholderImage;
 
@@ -17,6 +18,7 @@ public class CoreInventoryController : MonoBehaviour
 
     private UnityEvent onTabPressed; //for opening main inventory
     private InputSystem_Actions inputActions;
+
 
     private int toolbarSlots = 7;
     private int mainInventroySlots = 7;
@@ -77,6 +79,7 @@ public class CoreInventoryController : MonoBehaviour
         inputActions.Player.Disable();
     }
 
+
     public void AddItem(ItemScriptableObject item, int quantity)
     {
         int remaining = quantity; //how much of the item we still need to add to the inventory
@@ -100,7 +103,7 @@ public class CoreInventoryController : MonoBehaviour
         {
             if(itemList.Count >= 14)
             {
-                Debug.Log("Inventory full");
+                NotificationController.instance.ShowNotification("Inventory Full!");
                 break;
             }
 

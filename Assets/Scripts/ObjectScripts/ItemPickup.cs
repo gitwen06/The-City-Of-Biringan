@@ -27,10 +27,7 @@ public class ItemPickup : MonoBehaviour, Iinteractable
         if (!pickedUp)
         {
             inventoryController.AddItem(item, 1);
-            pickedUp = true;
-            thisObject.enabled = false;
-            thisObjectCollider.enabled = false;
-            StartCoroutine(OnObjectDestroy());
+      
         }
     }
 
