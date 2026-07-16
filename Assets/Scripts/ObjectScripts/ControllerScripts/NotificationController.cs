@@ -3,6 +3,7 @@ using System.Collections;
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class NotificationController : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class NotificationController : MonoBehaviour
     [SerializeField] private GameObject notificationPrefab;
 
     private List<ActiveNotification> notificationList = new List<ActiveNotification>();
+
+    public void Awake()
+    { 
+        instance = this;
+    }
 
     public void ShowNotification(string message)
     {
@@ -42,7 +48,7 @@ public class NotificationController : MonoBehaviour
         Vector2 startPos = new Vector2(0.02f, -50f);
         Vector2 endPos = new Vector2(0.02f, 50f);
 
-        Vector3 startScale = new Vector3(2.4f, 0.6f, 0.6f);
+        Vector3 startScale = new Vector3(0.6f, 0.6f, 0.6f);
         Vector3 endScale = Vector3.one; // (1, 1, 1) — full size
 
         rect.anchoredPosition = startPos;
@@ -70,9 +76,5 @@ public class NotificationController : MonoBehaviour
         }
 
         Destroy(notif);
-    }
-    public void Awake()
-    {
-        instance = this;
     }
 }

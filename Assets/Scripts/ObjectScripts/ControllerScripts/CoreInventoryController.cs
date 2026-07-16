@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using UnityEngine;
 using TMPro;
 using System.Reflection.Metadata;
+using Unity.Cinemachine;
+using Unity.VisualScripting;
 
 public class CoreInventoryController : MonoBehaviour
 {
@@ -12,14 +15,18 @@ public class CoreInventoryController : MonoBehaviour
     [SerializeField] private GameObject MainInventory;
     [SerializeField] private TMP_Text cursorText;
 
+    [SerializeField] private Transform handAnchor;
+
     [SerializeField] private Sprite placeholderImage;
 
-    public static CoreInventoryController instance; //singleton 
+    private GameObject currentHandModel;
 
-    private UnityEvent onTabPressed; //for opening main inventory
+    public static CoreInventoryController instance; //singleton 
+    private bool isMainInventoryOpen = false;
+
     private InputSystem_Actions inputActions;
 
-
+    private int selectedSlot = -1;
     private int toolbarSlots = 7;
     private int mainInventroySlots = 7;
 
@@ -39,6 +46,7 @@ public class CoreInventoryController : MonoBehaviour
             InventorySlotUI slotUI = new InventorySlotUI();
             slotUI.inventorySlotImage = img;
             slotUI.amountText = img.GetComponentInChildren<TextMeshProUGUI>();
+            slotUI.outline = img.GetComponentInChildren<UnityEngine.UI.Outline>();
             itemUIList.Add(slotUI);
         }
 
@@ -50,6 +58,7 @@ public class CoreInventoryController : MonoBehaviour
             InventorySlotUI slotUI = new InventorySlotUI();
             slotUI.inventorySlotImage = img;
             slotUI.amountText = img.GetComponentInChildren<TextMeshProUGUI>();
+            slotUI.outline = img.GetComponentInChildren<UnityEngine.UI.Outline>();
             itemUIList.Add(slotUI);
         }
 
@@ -64,19 +73,51 @@ public class CoreInventoryController : MonoBehaviour
     {
         if (inputActions.Player.OpenInventory.WasPressedThisFrame())
         {
-            onTabPressed.Invoke();
+            isMainInventoryOpen = !isMainInventoryOpen; 
+
+            MainInventory.SetActive(isMainInventoryOpen);
+
+            if (isMainInventoryOpen)
+            {
+                PlayerMovement pm = Object.FindAnyObjectByType<PlayerMovement>();
+                pm.FreezeInput();
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+            }
+            else
+            {
+                PlayerMovement pm = Object.FindAnyObjectByType<PlayerMovement>();
+                pm.UnfreezeInput();
+                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.visible = false;
+            }
         }
     }
 
     public void OnEnable()
     {
         inputActions.Player.Enable();
+        inputActions.Player.SelectItem.performed += OnSelectSlot;
 
     }
 
     public void OnDisable()
     {
         inputActions.Player.Disable();
+        inputActions.Player.SelectItem.performed -= OnSelectSlot;
+    }
+
+    private void OnSelectSlot(InputAction.CallbackContext context)
+    {
+        string inputName = context.control.name;
+        int inputNameInt = int.Parse(inputName); //convert "1" to 1
+        inputNameInt--; //make int be 0 based index
+
+        selectedSlot = inputNameInt;
+
+        UpdateHandDisplay();
+
+        UpdateSelectionHightlight();
     }
 
 
@@ -116,6 +157,42 @@ public class CoreInventoryController : MonoBehaviour
         UpdateInventoryUI();
     }
 
+    public void UpdateHandDisplay()
+    {
+        if (currentHandModel != null)
+        {
+            Destroy(currentHandModel);
+        }
+        if (selectedSlot >= 0 && selectedSlot < itemList.Count)
+        {
+            if (itemList[selectedSlot].item.handModel != null)
+            {
+                currentHandModel = Instantiate(itemList[selectedSlot].item.handModel, handAnchor);
+                currentHandModel.transform.localPosition = Vector3.zero;
+                currentHandModel.transform.localRotation = Quaternion.identity;
+            }
+        }
+
+    }
+
+    public void UpdateSelectionHightlight()
+    {
+        for(int i = 0; i < toolbarSlots + mainInventroySlots; i++)
+        {
+            if(i == selectedSlot)
+            {
+                itemUIList[i].outline.effectDistance = new Vector2(4f, 4f); // thicker
+                itemUIList[i].inventorySlotImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
+            }
+
+            else
+            {
+                itemUIList[i].outline.effectDistance = new Vector2(2f, 2f); // baseline thickness
+                itemUIList[i].inventorySlotImage.color = Color.white;
+            }
+        }
+    }
+
     public void UpdateInventoryUI()
     {
         for(int i = 0; i < toolbarSlots + mainInventroySlots; i++)
@@ -131,7 +208,8 @@ public class CoreInventoryController : MonoBehaviour
                 itemUIList[i].amountText.text = "";
             }
         }
-
+        UpdateHandDisplay();
+        UpdateSelectionHightlight();
     }
 
 }

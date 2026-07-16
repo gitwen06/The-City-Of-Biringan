@@ -8,4 +8,6 @@ public class ItemScriptableObject : ScriptableObject
     public Sprite Icon;
     public string description;
     public int maxStackSize;
+
+    public GameObject handModel;
 }

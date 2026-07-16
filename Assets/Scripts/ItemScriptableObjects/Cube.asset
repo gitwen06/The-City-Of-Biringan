@@ -17,3 +17,4 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: 487dfb71ed4d84a40817897ac6f35f23, type: 3}
   description: cube
   maxStackSize: 30
+  handModel: {fileID: 6450469778495508663, guid: d191f5592209cfe4f9fd775547f74263, type: 3}

@@ -5,5 +5,6 @@ public class InventorySlotUI
 {
     public Image inventorySlotImage;
     public TMPro.TMP_Text amountText;
+    public UnityEngine.UI.Outline outline;
     
 }
