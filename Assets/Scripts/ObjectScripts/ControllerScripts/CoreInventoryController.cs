@@ -5,8 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine;
 using TMPro;
-using System.Reflection.Metadata;
-using Unity.Cinemachine;
+using System.Linq;
 using Unity.VisualScripting;
 
 public class CoreInventoryController : MonoBehaviour
@@ -14,6 +13,8 @@ public class CoreInventoryController : MonoBehaviour
     [SerializeField] private GameObject Toolbar;
     [SerializeField] private GameObject MainInventory;
     [SerializeField] private TMP_Text cursorText;
+
+    [SerializeField] private Image ghostImageSource;
 
     [SerializeField] private Transform handAnchor;
 
@@ -26,12 +27,12 @@ public class CoreInventoryController : MonoBehaviour
 
     private InputSystem_Actions inputActions;
 
-    private int selectedSlot = -1;
+    private int selectedSlot = -1; // -1 at instantiation so inventory doesnt highlight any indexes
     private int toolbarSlots = 7;
     private int mainInventroySlots = 7;
 
-    private List<InventorySlot> itemList = new List<InventorySlot>();
-    private List<InventorySlotUI> itemUIList = new List<InventorySlotUI>();
+    private List<InventorySlot> itemList = Enumerable.Repeat<InventorySlot>(null, 14).ToList(); // make the list full of null entries for dragging system
+    private List<InventorySlotUI> itemUIList = new List<InventorySlotUI>(14);
 
     private void Awake()
     {
@@ -41,26 +42,32 @@ public class CoreInventoryController : MonoBehaviour
         //get all the images in the toolbar and main inventory and add them to the itemUIList of toolbar
         Image[] toolbarImages = Toolbar.GetComponentsInChildren<Image>();
 
-        foreach (Image img in toolbarImages)
+        for(int i = 0; i <  toolbarImages.Length; i++)
         {
             InventorySlotUI slotUI = new InventorySlotUI();
-            slotUI.inventorySlotImage = img;
-            slotUI.amountText = img.GetComponentInChildren<TextMeshProUGUI>();
-            slotUI.outline = img.GetComponentInChildren<UnityEngine.UI.Outline>();
+            slotUI.inventorySlotImage = toolbarImages[i];
+            slotUI.amountText = toolbarImages[i].GetComponentInChildren<TextMeshProUGUI>();
+            slotUI.outline = toolbarImages[i].GetComponentInChildren<UnityEngine.UI.Outline>();
+            DraggableSlot dragSlot = toolbarImages[i].GetComponent<DraggableSlot>();
+            dragSlot.slotIndex = i;
             itemUIList.Add(slotUI);
         }
 
         //get all the images in the main inventory and add them to the itemUIList of MainInventory
         Image[] MainInventoryImages = MainInventory.GetComponentsInChildren<Image>();
 
-        foreach (Image img in MainInventoryImages)
+        for(int i = 0; i <  MainInventoryImages.Length; i++)
         {
             InventorySlotUI slotUI = new InventorySlotUI();
-            slotUI.inventorySlotImage = img;
-            slotUI.amountText = img.GetComponentInChildren<TextMeshProUGUI>();
-            slotUI.outline = img.GetComponentInChildren<UnityEngine.UI.Outline>();
+            slotUI.inventorySlotImage = MainInventoryImages[i];
+            slotUI.amountText = MainInventoryImages[i].GetComponentInChildren<TextMeshProUGUI>();
+            slotUI.outline = MainInventoryImages[i].GetComponentInChildren<UnityEngine.UI.Outline>();
+            DraggableSlot dragSlot = MainInventoryImages[i].GetComponent<DraggableSlot>();
+            dragSlot.slotIndex = toolbarSlots + i;
             itemUIList.Add(slotUI);
         }
+
+        DraggableSlot.SetGhostImage(ghostImageSource);
 
     }
 
@@ -123,11 +130,12 @@ public class CoreInventoryController : MonoBehaviour
 
     public void AddItem(ItemScriptableObject item, int quantity)
     {
+        int counter = 0;
         int remaining = quantity; //how much of the item we still need to add to the inventory
 
         for (int i = 0; i < itemList.Count; i++)
         {
-            if (itemList[i].item == item && itemList[i].quantity < item.maxStackSize)
+            if (itemList[i] != null && itemList[i].item == item && itemList[i].quantity < item.maxStackSize)
             {
                 int room = item.maxStackSize - itemList[i].quantity;
                 int amountToAdd = Mathf.Min(room, remaining); //return which one is smaller
@@ -142,19 +150,56 @@ public class CoreInventoryController : MonoBehaviour
         }
         while (remaining > 0)
         {
-            if(itemList.Count >= 14)
+            if (counter >= 14)
             {
                 NotificationController.instance.ShowNotification("Inventory Full!");
                 break;
             }
 
-            InventorySlot newSlot = new InventorySlot();
-            newSlot.item = item;
-            newSlot.quantity = Mathf.Min(remaining, item.maxStackSize); //for items that come in batch(e.g coins, 3)
-            itemList.Add(newSlot);
-            remaining -= newSlot.quantity;
+            if (itemList[counter] == null)
+            {
+                InventorySlot newSlot = new InventorySlot();
+                newSlot.item = item;
+                newSlot.quantity = Mathf.Min(remaining, item.maxStackSize);
+                itemList[counter] = newSlot;
+                remaining -= newSlot.quantity;
+            }
+
+            counter++;
         }
         UpdateInventoryUI();
+    }
+
+    public void MoveItem(int FromIndex, int ToIndex)
+    {
+        if (itemList[FromIndex] == null) { return; }
+        if (FromIndex == ToIndex) { return; }
+
+        //if item slot is null go there
+        if (itemList[ToIndex] == null)
+        {
+            //instance item in toindex
+            //destroy fromindex item
+            itemList[ToIndex] = itemList[FromIndex];
+            itemList[FromIndex] = null;
+
+        }
+        //if item type is the same type
+        else if (itemList[FromIndex].item == itemList[ToIndex].item)
+        {
+            if (itemList[ToIndex].quantity >= itemList[ToIndex].item.maxStackSize)
+            {
+                return; // target already completely full, do nothing
+            }
+
+            AddItem(itemList[FromIndex].item, itemList[FromIndex].quantity);
+            itemList[FromIndex] = null;
+        }
+        //if not same type do nithign
+        else { return; }
+
+        UpdateInventoryUI(); //updateinventory ui since only additem calls it for 1 instance.
+
     }
 
     public void UpdateHandDisplay()
@@ -165,7 +210,7 @@ public class CoreInventoryController : MonoBehaviour
         }
         if (selectedSlot >= 0 && selectedSlot < itemList.Count)
         {
-            if (itemList[selectedSlot].item.handModel != null)
+            if (itemList[selectedSlot] != null && itemList[selectedSlot].item.handModel != null)
             {
                 currentHandModel = Instantiate(itemList[selectedSlot].item.handModel, handAnchor);
                 currentHandModel.transform.localPosition = Vector3.zero;
@@ -197,7 +242,7 @@ public class CoreInventoryController : MonoBehaviour
     {
         for(int i = 0; i < toolbarSlots + mainInventroySlots; i++)
         {
-            if (i < itemList.Count)
+            if (itemList[i] != null)
             {
                 itemUIList[i].inventorySlotImage.sprite = itemList[i].item.Icon;
                 itemUIList[i].amountText.text = itemList[i].quantity.ToString();
@@ -212,4 +257,17 @@ public class CoreInventoryController : MonoBehaviour
         UpdateSelectionHightlight();
     }
 
+
+    //called by draggable slot(for reference)
+    public ItemScriptableObject GetItemAtSlot(int slot)
+    {
+        if(itemList[slot] != null)
+        {
+            return itemList[slot].item;
+        }
+        else
+        {
+            return null;
+        }
+    }
 }
