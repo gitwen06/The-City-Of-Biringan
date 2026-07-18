@@ -202,6 +202,15 @@ public class CoreInventoryController : MonoBehaviour
 
     }
 
+    public void UseSelectedItem()
+    {
+        if(selectedSlot >= 0 && selectedSlot < itemList.Count && itemList[selectedSlot] != null)
+        {
+            itemList[selectedSlot].item.Use();
+        }
+
+    }
+
     public void UpdateHandDisplay()
     {
         if (currentHandModel != null)

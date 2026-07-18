@@ -6,6 +6,8 @@ public class DoorController : MonoBehaviour, Iinteractable
     private bool isDoorOpen = false;
     private Outline outline;
 
+    public string doorName; //doorid
+
     public bool doorLocked = false;
     void Start()
     {
@@ -13,28 +15,31 @@ public class DoorController : MonoBehaviour, Iinteractable
         animator = GetComponent<Animator>();
         outline = GetComponent<Outline>();
         if (outline != null) outline.enabled = false;
+        DoorRegistry.instance.RegisterDoor(doorName, this);
     }
 
     // Call this method via player interaction system (Raycast, Trigger, or UI button)
     public void Interact()
     {
-        if(!doorLocked)
+        if (doorLocked)
+        {
+            CoreInventoryController.instance.UseSelectedItem();
+        }
+
+        if (!doorLocked)
         {
             isDoorOpen = !isDoorOpen;
-
-            // Update the Animator parameter to shift states
             animator.SetBool("isOpen", isDoorOpen);
         }
         else
         {
-            Debug.Log("Door is locked!");
+            NotificationController.instance.ShowNotification("Door Locked");
         }
-        
     }
 
     public void unlockDoor()
     {
-        
+        doorLocked = false;
     }
 
     public void EnableOutline()

@@ -10,4 +10,9 @@ public class ItemScriptableObject : ScriptableObject
     public int maxStackSize;
 
     public GameObject handModel;
+
+    public virtual void Use()
+    {
+        //useitem
+    }
 }

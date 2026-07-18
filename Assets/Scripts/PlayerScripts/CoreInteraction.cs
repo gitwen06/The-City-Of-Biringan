@@ -45,6 +45,10 @@ public class CoreInteraction : MonoBehaviour
                 currentInteractable.Interact();
                 Debug.Log("Interacted");
             }
+            else
+            {
+                CoreInventoryController.instance.UseSelectedItem();
+            }
         }
     }
 
