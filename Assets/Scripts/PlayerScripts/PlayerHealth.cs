@@ -45,6 +45,8 @@ public class PlayerHealth : MonoBehaviour
 
     public float HealHP(float heal)
     {
+        if(currentHealth > maxHealth) { return currentHealth; }
+
         currentHealth += heal;
         healthSlider.value = currentHealth;
         return currentHealth;

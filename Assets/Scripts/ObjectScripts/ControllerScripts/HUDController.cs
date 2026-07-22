@@ -6,6 +6,11 @@ public class HUDController : MonoBehaviour
 {
     public static HUDController instance;
 
+    [SerializeField] private Canvas HUD;
+
+    [SerializeField] private GameObject toolbar;
+    [SerializeField] private GameObject mainInventory;
+
     [SerializeField] private Image cursor;
     [SerializeField] private GameObject health;
     [SerializeField] private GameObject stamina;
@@ -29,6 +34,17 @@ public class HUDController : MonoBehaviour
         cursor.enabled = true;
         health.SetActive(true);
         stamina.SetActive(true);
+    }
+
+    public void disableInventory()
+    {
+        toolbar.SetActive(false);
+        mainInventory.SetActive(false);
+    }
+
+    public void enableInventory()
+    {
+        toolbar.SetActive(true);
     }
 
     public void ShowInteractionText()

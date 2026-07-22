@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class ReadNote : MonoBehaviour, Iinteractable
 {
-    [SerializeField]public string text;
+    [SerializeField] public string text;
+
     Outline outline;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,7 +18,8 @@ public class ReadNote : MonoBehaviour, Iinteractable
         NoteController.instance.SetText(text, true);
         HUDController.instance.hideUINote();
         HUDController.instance.DisableInteractionText();
-
+        HUDController.instance.disableInventory();
+        
     }
 
     public void EnableOutline()

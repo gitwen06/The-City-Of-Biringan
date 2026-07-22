@@ -78,9 +78,11 @@ public class CoreInventoryController : MonoBehaviour
 
     public void Update()
     {
-        if (inputActions.Player.OpenInventory.WasPressedThisFrame())
+        if (inputActions.Player.OpenInventory.WasPressedThisFrame() && !NoteController.instance.isreading)
         {
-            isMainInventoryOpen = !isMainInventoryOpen; 
+            Debug.Log(NoteController.instance.isreading);
+            isMainInventoryOpen = !isMainInventoryOpen;
+            Debug.Log($"Tab pressed, isMainInventoryOpen: {isMainInventoryOpen}");
 
             MainInventory.SetActive(isMainInventoryOpen);
 

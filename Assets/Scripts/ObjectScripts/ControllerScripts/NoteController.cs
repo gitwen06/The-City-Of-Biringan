@@ -5,6 +5,8 @@ public class NoteController : MonoBehaviour
 {
     public static NoteController instance;
 
+    public bool isreading = false;
+
     string text;
     public TMP_Text noteText;
     bool isShowing = false;
@@ -89,6 +91,7 @@ public class NoteController : MonoBehaviour
             // opening note: show cursor and unlock so UI can receive clicks
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
+            isreading = true;
 
             // freeze player input while viewing
             FreezePlayer();
@@ -98,17 +101,26 @@ public class NoteController : MonoBehaviour
             // closing note: hide cursor and re-lock
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+            isreading = false;
+            Debug.Log($"isreading is now: {isreading}");
 
             // unfreeze player input
             UnfreezePlayer();
             // restore HUD when closing note
             if (HUDController.instance != null) HUDController.instance.showUiNote();
         }
+
+        
     }
 
+    public bool isReading()
+    { 
+        return isreading;
+    }
     // Called by UI button to close the note
     public void CloseNote()
     {
         SetText("", false);
+        isreading = false;
     }
 }

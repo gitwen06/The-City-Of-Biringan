@@ -4,6 +4,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue")]
 public class DialogueData : ScriptableObject
 {
-    public List<DialogueNode> nodes;
-   
+    public List<DialogueNode> nodes;  
 }
