@@ -37,6 +37,7 @@ public class CoreInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (DialogueController.instance.IsDialogueActive()) { return; }
         CheckInteraction();
         if (inputActions.Player.Interact.WasPressedThisFrame())
         {
