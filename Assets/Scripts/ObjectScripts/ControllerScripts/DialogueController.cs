@@ -22,6 +22,8 @@ public class DialogueController : MonoBehaviour
     private bool isTyping = false;
     private Coroutine typingCoroutine;
 
+    private bool justStarted = false;
+
     private void Awake()
     {
         instance = this;
@@ -51,6 +53,12 @@ public class DialogueController : MonoBehaviour
     {
         if (!IsDialogueActive()) { return; }
 
+        if(justStarted)
+        {
+            justStarted = false;
+            return;
+        }
+
         if (inputActions.Player.Interact.WasPressedThisFrame())
         {
             DialogueNode node = currentDialogue.nodes[currentNodeIndex];
@@ -62,9 +70,22 @@ public class DialogueController : MonoBehaviour
                 isTyping = false;
                 ShowOptions(node);
             }
-            else if (node.options.Count == 1)
+            else
             {
-                SelectOptions(0);
+                //not typing
+                if (node.options == null || node.options.Count == 0)
+                {
+                    int next = currentNodeIndex + 1;
+                    if (next >= 0 && next < currentDialogue.nodes.Count)
+                    {
+                        currentNodeIndex = next;
+                        ShowNode();
+                    }
+                    else
+                    {
+                        EndDialogue();
+                    }
+                }
             }
         }
     }
@@ -82,6 +103,8 @@ public class DialogueController : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         FreezePlayer();
+
+        justStarted = true;
 
         //display first node
     }
@@ -104,6 +127,14 @@ public class DialogueController : MonoBehaviour
     {
         DialogueNode node = currentDialogue.nodes[currentNodeIndex];
         speakerNameText.text = node.speakerName;
+        //hide any leftover option buttons from the previous node while typing
+        for (int i = 0; i < optionsButton.Count; i++)
+        {
+            optionsButton[i].gameObject.SetActive(false);
+            if (i < optionsText.Count)
+                optionsText[i].text = string.Empty;
+        }
+
         typingCoroutine = StartCoroutine(Typing(node));
     }
 
@@ -127,6 +158,7 @@ public class DialogueController : MonoBehaviour
     {
         DialogueNode node = currentDialogue.nodes[currentNodeIndex];
         int nextIndex = node.options[optionIndex].nextNodeIndex;
+        Debug.Log($"Node has {node.options.Count} options. optionsButton.Count = {optionsButton.Count}, optionsText.Count = {optionsText.Count}");
 
         if (nextIndex >= 0 && nextIndex < currentDialogue.nodes.Count)
         {
