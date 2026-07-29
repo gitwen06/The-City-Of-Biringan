@@ -21,10 +21,16 @@ MonoBehaviour:
     eventAction:
       m_PersistentCalls:
         m_Calls: []
+    eventActionTransform:
+      m_PersistentCalls:
+        m_Calls: []
   - speakerName: Absolute Chad
     text: wyd.....................
     options: []
     eventAction:
+      m_PersistentCalls:
+        m_Calls: []
+    eventActionTransform:
       m_PersistentCalls:
         m_Calls: []
   - speakerName: Absolute Chad
@@ -33,15 +39,24 @@ MonoBehaviour:
     eventAction:
       m_PersistentCalls:
         m_Calls: []
+    eventActionTransform:
+      m_PersistentCalls:
+        m_Calls: []
   - speakerName: Absolute Chad
     text: take care
     options: []
     eventAction:
       m_PersistentCalls:
         m_Calls: []
+    eventActionTransform:
+      m_PersistentCalls:
+        m_Calls: []
   - speakerName: Absolute Chad
     text: dumbass
     options: []
     eventAction:
+      m_PersistentCalls:
+        m_Calls: []
+    eventActionTransform:
       m_PersistentCalls:
         m_Calls: []

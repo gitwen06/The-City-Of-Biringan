@@ -48,7 +48,10 @@ public class CoreInteraction : MonoBehaviour
             }
             else
             {
-                CoreInventoryController.instance.UseSelectedItem();
+                if(CoreInventoryController.instance.IsUsableInOpenSpace())
+                {
+                    CoreInventoryController.instance.UseSelectedItem();
+                }
             }
         }
     }

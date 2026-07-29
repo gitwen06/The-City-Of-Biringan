@@ -9,4 +9,6 @@ public class DialogueNode
     public string text;
     public List<DialogueOption> options;
     public UnityEvent eventAction;
+    public UnityEvent<Transform> eventActionTransform;
 }
+

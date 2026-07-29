@@ -134,7 +134,7 @@ public class DialogueController : MonoBehaviour
             if (i < optionsText.Count)
                 optionsText[i].text = string.Empty;
         }
-
+        node.eventAction?.Invoke();
         typingCoroutine = StartCoroutine(Typing(node));
     }
 

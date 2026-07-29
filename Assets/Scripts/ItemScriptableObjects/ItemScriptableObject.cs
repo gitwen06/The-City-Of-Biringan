@@ -9,10 +9,12 @@ public class ItemScriptableObject : ScriptableObject
     public string description;
     public int maxStackSize;
 
+    public bool useableInOpenSpace;
+
     public GameObject handModel;
 
     public virtual void Use()
     {
-        //useitem
+        Debug.Log("USED");
     }
 }

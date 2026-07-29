@@ -11,16 +11,17 @@ public class DoorController : MonoBehaviour, Iinteractable
     public bool doorLocked = false;
     void Start()
     {
-        // Get the Animator component attached to the pivot object
         animator = GetComponent<Animator>();
         outline = GetComponent<Outline>();
         if (outline != null) outline.enabled = false;
         DoorRegistry.instance.RegisterDoor(doorName, this);
     }
 
-    // Call this method via player interaction system (Raycast, Trigger, or UI button)
     public void Interact()
     {
+        if (animator.GetCurrentAnimatorStateInfo(0).length >
+         animator.GetCurrentAnimatorStateInfo(0).normalizedTime) { return; }
+
         if (doorLocked)
         {
             CoreInventoryController.instance.UseSelectedItem();

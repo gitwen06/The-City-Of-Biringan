@@ -268,6 +268,19 @@ public class CoreInventoryController : MonoBehaviour
         UpdateSelectionHightlight();
     }
 
+    //for checking if item is useable even if palyer is not facing something
+    public bool IsUsableInOpenSpace()
+    {
+        if (selectedSlot >= 0 && selectedSlot < itemList.Count && itemList[selectedSlot] != null)
+        {
+            return itemList[selectedSlot].item.useableInOpenSpace;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     //called by draggable slot(for reference)
     public ItemScriptableObject GetItemAtSlot(int slot)
