@@ -15,13 +15,17 @@ public class EventDialogueController : MonoBehaviour
         instance = this;
     }
 
-    public void LookAt(Transform target)
+    public void LookAt(string targetId)
     {
-        StartCoroutine(AnimateLookAt(target));
+        Transform target = CameraTargetRegistry.instance.GetTarget(targetId); //get from cameratargetresgistry, returns Transform
+        if (target == null) { return; } //null check, important i think
+        StartCoroutine(AnimateLookAt(target)); //use transform as parameter for coroutine wow
     }
 
-    public void MoveTo(Transform target)
+    public void MoveTo(string targetId)
     {
+        Transform target = CameraTargetRegistry.instance.GetTarget(targetId);
+        if (target == null) { return; }
         StartCoroutine(AnimateMoveTo(target));
     }
 
@@ -93,3 +97,4 @@ public class EventDialogueController : MonoBehaviour
         }
     }
 }
+//make that 100 lines
