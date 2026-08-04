@@ -39,7 +39,7 @@ public class CoreInteraction : MonoBehaviour
     {
         if (DialogueController.instance.IsDialogueActive()) { return; }
         CheckInteraction();
-        if (inputActions.Player.Interact.WasPressedThisFrame())
+        if (inputActions.Player.Interact.WasPressedThisFrame() && !GameFlags.instance.GetFlag("isGamePaused"))
         {
             if (currentInteractable != null)
             {

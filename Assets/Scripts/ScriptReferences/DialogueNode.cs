@@ -9,5 +9,17 @@ public class DialogueNode
     public string text;
     public List<DialogueOption> options;
     public UnityEvent eventAction;
+
+    public CameraEventType cameraEvent;
+    public string cameraTargetId;
+
+    public enum CameraEventType
+    {
+        None,
+        LookAt,
+        MoveTo,
+        ResetAnimated,
+        ResetStatic
+    }
 }
 

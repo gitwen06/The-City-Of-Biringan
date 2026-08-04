@@ -10,6 +10,7 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private Canvas deathHUD;
 
     [SerializeField] private float maxHealth;
+
     private float currentHealth;
 
     public void Awake()
@@ -27,12 +28,14 @@ public class PlayerHealth : MonoBehaviour
             healthSlider.value = currentHealth;
         }
 
+        GameFlags.instance.SetFlag("isPlayerDead", false);
     }
 
     public float ReduceHP(float damage)
     {
         if(currentHealth - damage <= 0)
         {
+            GameFlags.instance.SetFlag("isPlayerDead", true);
             ShowDeathHUD();
         }
         else

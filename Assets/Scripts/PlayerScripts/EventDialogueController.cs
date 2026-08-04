@@ -64,6 +64,8 @@ public class EventDialogueController : MonoBehaviour
     IEnumerator AnimateLookAt(Transform target)
     {
         originalRotation = playerCameraTransform.rotation;
+        Quaternion targetRotation = Quaternion.LookRotation(target.position - playerCameraTransform.position);
+
         float elapsed = 0f;
         float duration = 1.5f;
 
@@ -72,7 +74,7 @@ public class EventDialogueController : MonoBehaviour
             float t = elapsed / duration;
             float easedT = 1f - Mathf.Pow(1f - t, 3f);
 
-            playerCameraTransform.rotation = Quaternion.Lerp(originalRotation, target.rotation, easedT);
+            playerCameraTransform.rotation = Quaternion.Lerp(originalRotation, targetRotation, easedT);
 
             elapsed += Time.deltaTime;
             yield return null;
