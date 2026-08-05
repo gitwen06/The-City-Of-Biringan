@@ -12,7 +12,6 @@ public class CoreInventoryController : MonoBehaviour
 {
     [SerializeField] private GameObject Toolbar;
     [SerializeField] private GameObject MainInventory;
-    [SerializeField] private TMP_Text cursorText;
 
     [SerializeField] private Image ghostImageSource;
 

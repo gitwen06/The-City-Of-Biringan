@@ -8,6 +8,10 @@ public class AsyncLoader : MonoBehaviour
     [SerializeField] private Slider loadingSlider;
     [SerializeField] private int targetSceneIndex = 2;
 
+    void Awake()
+    {
+        Time.timeScale = 1f; // Ensure time scale is reset to normal when loading a new scene
+    }
     void Start()
     {
         StartCoroutine(LoadAsynchronously(targetSceneIndex));

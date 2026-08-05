@@ -15,6 +15,14 @@ public class EventDialogueController : MonoBehaviour
         instance = this;
     }
 
+    public void MoveAndLook(string moveTargetId, string lookTargetId)
+    {
+        Transform moveTarget = CameraTargetRegistry.instance.GetTarget(moveTargetId);
+        Transform lookTarget = CameraTargetRegistry.instance.GetTarget(lookTargetId);
+        if (moveTarget == null || lookTarget == null) { return; }
+        StartCoroutine(AnimateMoveAndLook(moveTarget, lookTarget));
+    }
+
     public void LookAt(string targetId)
     {
         Transform target = CameraTargetRegistry.instance.GetTarget(targetId); //get from cameratargetresgistry, returns Transform
@@ -94,6 +102,24 @@ public class EventDialogueController : MonoBehaviour
 
             playerCameraTransform.position = Vector3.Lerp(originalPosition, target.position, easedT);
 
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    IEnumerator AnimateMoveAndLook(Transform moveTarget, Transform lookTarget)
+    {
+        originalPosition = playerCameraTransform.position;
+        originalRotation = playerCameraTransform.rotation;
+        Quaternion targetRotation = Quaternion.LookRotation(lookTarget.position - playerCameraTransform.position);
+        float elapsed = 0f;
+        float duration = 1.5f;
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            float easedT = 1f - Mathf.Pow(1f - t, 3f);
+            playerCameraTransform.position = Vector3.Lerp(originalPosition, moveTarget.position, easedT);
+            playerCameraTransform.rotation = Quaternion.Lerp(originalRotation, targetRotation, easedT);
             elapsed += Time.deltaTime;
             yield return null;
         }

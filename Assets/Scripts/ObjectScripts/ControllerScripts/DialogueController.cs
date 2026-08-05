@@ -150,6 +150,9 @@ public class DialogueController : MonoBehaviour
             case DialogueNode.CameraEventType.ResetStatic:
                 EventDialogueController.instance.ResetCameraStatic();
                 break;
+            case DialogueNode.CameraEventType.MoveAndLook:
+                EventDialogueController.instance.MoveAndLook(node.moveTargetId, node.lookTargetId);
+                break;
         }
         typingCoroutine = StartCoroutine(Typing(node));
     }

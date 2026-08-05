@@ -6,6 +6,7 @@ public class DialogueTrigger : MonoBehaviour, Iinteractable
     [SerializeField] DialogueData normalDialogue;
     [SerializeField] DialogueData talkedDialogue;
     [SerializeField] DialogueData hasSomethingDialogue;
+    [SerializeField] Camera playerCamera;
     Outline outline;
 
     public void Start()
@@ -17,6 +18,7 @@ public class DialogueTrigger : MonoBehaviour, Iinteractable
     public void Interact()
     {
         if (DialogueController.instance.IsDialogueActive()) { return; }
+
 
 
         if (!GameFlags.instance.GetFlag("talkedtoNPC1"))

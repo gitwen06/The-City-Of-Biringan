@@ -69,7 +69,7 @@ public class MenuController : MonoBehaviour
 
     public void OnQuitGame()
     {
-        OnResumeGame();
+        Time.timeScale = 1f;
         PlayerHealth.Instance.ReturnToMainMenu();
     }
 

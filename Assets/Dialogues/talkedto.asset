@@ -23,51 +23,65 @@ MonoBehaviour:
         m_Calls: []
     cameraEvent: 0
     cameraTargetId: 
+    moveTargetId: 
+    lookTargetId: 
   - speakerName: Absolute Chad
     text: wyd.....................
     options: []
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 1
+    cameraEvent: 0
     cameraTargetId: lookpoint_1
+    moveTargetId: 
+    lookTargetId: 
   - speakerName: Absolute Chad
     text: ' im just an acbosdionoewu fnaoweunfhoweafn eujo9hnf 1-2389213 ][/][./\];[/=-./][123 '
     options: []
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 2
+    cameraEvent: 0
     cameraTargetId: lookpoint_1
+    moveTargetId: 
+    lookTargetId: 
   - speakerName: Absolute Chad
     text: take care
     options: []
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 1
-    cameraTargetId: player_look
+    cameraEvent: 0
+    cameraTargetId: 
+    moveTargetId: 
+    lookTargetId: 
   - speakerName: Absolute Chad
     text: dumbass
     options: []
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 1
-    cameraTargetId: lookpoint_2
+    cameraEvent: 3
+    cameraTargetId: 
+    moveTargetId: lookpoint_1
+    lookTargetId: player_look
   - speakerName: Absolute Chad
     text: what you looking around for
     options: []
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 3
+    cameraEvent: 0
     cameraTargetId: 
+    moveTargetId: 
+    lookTargetId: 
   - speakerName: Absolute Chad
     text: what you trying to do hey
     options: []
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 4
+    cameraEvent: 5
     cameraTargetId: 
+    moveTargetId: 
+    lookTargetId: 
