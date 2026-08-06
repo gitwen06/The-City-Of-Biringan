@@ -26,8 +26,22 @@ public class DialogueController : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
+        Debug.Log($"DialogueController Awake — GameObject: {gameObject.name}, Scene: {gameObject.scene.name}");
         inputActions = new InputSystem_Actions();
+    }
+
+    private void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 
     private void Start()

@@ -37,7 +37,12 @@ public class CoreInteraction : MonoBehaviour
 
     private void Update()
     {
-        if (DialogueController.instance.IsDialogueActive()) { return; }
+        if (DialogueController.instance.IsDialogueActive())
+        {
+            Debug.Log("CoreInteraction: dialogue active, skipping interact check");
+            return;
+        }
+
         CheckInteraction();
         if (inputActions.Player.Interact.WasPressedThisFrame() && !GameFlags.instance.GetFlag("isGamePaused"))
         {

@@ -1326,6 +1326,8 @@ GameObject:
   - component: {fileID: 121888897}
   - component: {fileID: 121888899}
   - component: {fileID: 121888900}
+  - component: {fileID: 121888901}
+  - component: {fileID: 121888902}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -1386,6 +1388,38 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MenuController
   pauseMenuUI: {fileID: 565170184}
   HUDUI: {fileID: 2134183716}
+--- !u!114 &121888901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121888896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73c32ee854ddf0f4d8ca9de6aeda0cca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameFlags
+--- !u!114 &121888902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 121888896}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e78266f9b2586a43b66bef255a7d533, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueController
+  dialogueBox: {fileID: 39586192}
+  speakerNameText: {fileID: 532716238}
+  dialogueText: {fileID: 1630296028}
+  optionsButton:
+  - {fileID: 1859575642}
+  - {fileID: 595413680}
+  - {fileID: 1066293480}
+  - {fileID: 1451351090}
 --- !u!1001 &125075079
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3139,7 +3173,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1429089401}
+      - m_Target: {fileID: 121888902}
         m_TargetAssemblyTypeName: DialogueController, Assembly-CSharp
         m_MethodName: SelectOptions
         m_Mode: 3
@@ -3761,19 +3795,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 732684577}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 121888900}
-        m_TargetAssemblyTypeName: MenuController, Assembly-CSharp
-        m_MethodName: OnResumeGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &732684577
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4908,7 +4930,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1429089401}
+      - m_Target: {fileID: 121888902}
         m_TargetAssemblyTypeName: DialogueController, Assembly-CSharp
         m_MethodName: SelectOptions
         m_Mode: 3
@@ -5933,71 +5955,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 5.5}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1429089400
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1429089402}
-  - component: {fileID: 1429089401}
-  - component: {fileID: 1429089403}
-  m_Layer: 0
-  m_Name: DialogueController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1429089401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1429089400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e78266f9b2586a43b66bef255a7d533, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DialogueController
-  dialogueBox: {fileID: 39586192}
-  speakerNameText: {fileID: 532716238}
-  dialogueText: {fileID: 1630296028}
-  optionsButton:
-  - {fileID: 1859575642}
-  - {fileID: 595413680}
-  - {fileID: 1066293480}
-  - {fileID: 1451351090}
---- !u!4 &1429089402
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1429089400}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 561.9303, y: 158.28006, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1429089403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1429089400}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73c32ee854ddf0f4d8ca9de6aeda0cca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GameFlags
 --- !u!1 &1451351088
 GameObject:
   m_ObjectHideFlags: 0
@@ -6081,7 +6038,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1429089401}
+      - m_Target: {fileID: 121888902}
         m_TargetAssemblyTypeName: DialogueController, Assembly-CSharp
         m_MethodName: SelectOptions
         m_Mode: 3
@@ -8157,7 +8114,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1429089401}
+      - m_Target: {fileID: 121888902}
         m_TargetAssemblyTypeName: DialogueController, Assembly-CSharp
         m_MethodName: SelectOptions
         m_Mode: 3
@@ -14935,6 +14892,5 @@ SceneRoots:
   - {fileID: 1898685049}
   - {fileID: 565170188}
   - {fileID: 39586193}
-  - {fileID: 1429089402}
   - {fileID: 1751393754}
   - {fileID: 1322885822}

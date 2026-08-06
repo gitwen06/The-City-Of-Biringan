@@ -31,7 +31,7 @@ MonoBehaviour:
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 0
+    cameraEvent: 1
     cameraTargetId: lookpoint_1
     moveTargetId: 
     lookTargetId: 
@@ -41,7 +41,7 @@ MonoBehaviour:
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 0
+    cameraEvent: 2
     cameraTargetId: lookpoint_1
     moveTargetId: 
     lookTargetId: 
@@ -51,7 +51,7 @@ MonoBehaviour:
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 0
+    cameraEvent: 5
     cameraTargetId: 
     moveTargetId: 
     lookTargetId: 

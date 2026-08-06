@@ -15,9 +15,22 @@ public class HUDController : MonoBehaviour
     [SerializeField] private GameObject health;
     [SerializeField] private GameObject stamina;
 
-    void Awake()
+    public void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
+    }
+
+    public void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 
     [SerializeField] private TMP_Text interactionText;

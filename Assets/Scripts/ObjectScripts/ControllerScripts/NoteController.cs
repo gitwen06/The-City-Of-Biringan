@@ -10,9 +10,22 @@ public class NoteController : MonoBehaviour
     string text;
     public TMP_Text noteText;
     bool isShowing = false;
-    void Awake()
+    public void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
+    }
+
+    public void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 
     private void Start()
@@ -113,7 +126,7 @@ public class NoteController : MonoBehaviour
         
     }
 
-    public bool isReading()
+    public bool IsReading()
     { 
         return isreading;
     }

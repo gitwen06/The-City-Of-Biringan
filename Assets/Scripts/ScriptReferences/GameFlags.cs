@@ -9,7 +9,20 @@ public class GameFlags : MonoBehaviour
 
     public void Awake()
     {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
+    }
+
+    public void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 
     public void SetFlag(string key, bool value)

@@ -19,7 +19,7 @@ public class DialogueTrigger : MonoBehaviour, Iinteractable
     {
         if (DialogueController.instance.IsDialogueActive()) { return; }
 
-
+        Debug.Log("DialogueTrigger.Interact() called");
 
         if (!GameFlags.instance.GetFlag("talkedtoNPC1"))
         {
