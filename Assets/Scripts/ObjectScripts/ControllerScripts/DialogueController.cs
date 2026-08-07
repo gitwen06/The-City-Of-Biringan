@@ -155,17 +155,8 @@ public class DialogueController : MonoBehaviour
             case DialogueNode.CameraEventType.LookAt:
                 EventDialogueController.instance.LookAt(node.cameraTargetId);
                 break;
-            case DialogueNode.CameraEventType.MoveTo:
-                EventDialogueController.instance.MoveTo(node.cameraTargetId);
-                break;
-            case DialogueNode.CameraEventType.ResetAnimated:
-                EventDialogueController.instance.ResetCameraAnimated();
-                break;
             case DialogueNode.CameraEventType.ResetStatic:
                 EventDialogueController.instance.ResetCameraStatic();
-                break;
-            case DialogueNode.CameraEventType.MoveAndLook:
-                EventDialogueController.instance.MoveAndLook(node.moveTargetId, node.lookTargetId);
                 break;
         }
         typingCoroutine = StartCoroutine(Typing(node));

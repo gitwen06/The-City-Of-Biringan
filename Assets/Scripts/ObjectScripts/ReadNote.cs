@@ -15,6 +15,7 @@ public class ReadNote : MonoBehaviour, Iinteractable
     public void Interact()
     {
         // Open the note UI. NoteController will handle cursor and freezing.
+        if(DialogueController.instance.IsDialogueActive()) { return; }
         NoteController.instance.SetText(text, true);
         HUDController.instance.hideUINote();
         HUDController.instance.DisableInteractionText();
