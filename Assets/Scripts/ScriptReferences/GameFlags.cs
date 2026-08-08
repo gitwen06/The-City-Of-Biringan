@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class GameFlags : MonoBehaviour
 {
-    public Dictionary<string , bool> flags = new Dictionary<string , bool>();
+    private Dictionary<string , bool> flags = new Dictionary<string , bool>();
 
     public static GameFlags instance;
 

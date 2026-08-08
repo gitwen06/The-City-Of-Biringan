@@ -117,6 +117,8 @@ public class CoreInventoryController : MonoBehaviour
 
     private void OnSelectSlot(InputAction.CallbackContext context)
     {
+        if(!Toolbar.activeInHierarchy) { return; }
+
         string inputName = context.control.name;
         int inputNameInt = int.Parse(inputName); //convert "1" to 1
         inputNameInt--; //make int be 0 based index

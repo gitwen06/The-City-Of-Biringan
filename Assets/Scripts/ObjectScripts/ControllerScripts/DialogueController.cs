@@ -23,7 +23,7 @@ public class DialogueController : MonoBehaviour
     private Coroutine typingCoroutine;
 
     private bool justStarted = false;
-
+    private bool justEnded = false;
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -114,6 +114,7 @@ public class DialogueController : MonoBehaviour
 
         HUDController.instance.DisableInteractionText();
         HUDController.instance.hideUINote();
+        HUDController.instance.disableInventory();
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         FreezePlayer();
@@ -135,6 +136,15 @@ public class DialogueController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         UnfreezePlayer();
+
+        justEnded = true;
+    }
+
+    public bool ConsumeJustEnded()
+    {
+        if (!justEnded) return false;
+        justEnded = false;
+        return true;
     }
 
     public void ShowNode()

@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 
 public class Trigger : MonoBehaviour
 {
     public UnityEvent onTriggerEnter;
     public UnityEvent onTriggerExit;
 
-    public ParticleSystem myParticleSystem;
+    [SerializeField] private PlayableDirector cutscene;
+    private bool isPlayed;
     public Outline outline;
 
     private void Start()
@@ -19,6 +21,11 @@ public class Trigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             onTriggerEnter.Invoke();
+            if (cutscene != null && !isPlayed)
+            {
+                CutsceneRunner.instance.Play(cutscene);
+                isPlayed = true;
+            }
         }
         else
         {

@@ -13,15 +13,10 @@ public class DialogueNode
     public CameraEventType cameraEvent;
     public string cameraTargetId;
 
-    public string moveTargetId;
-    public string lookTargetId;
     public enum CameraEventType
     {
         None,
         LookAt,
-        MoveTo,
-        MoveAndLook,
-        ResetAnimated,
         ResetStatic
     }
 }

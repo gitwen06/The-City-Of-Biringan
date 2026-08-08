@@ -40,7 +40,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float standHeight = 2f;
     [SerializeField] private float crouchHeight = 1f;
     private CapsuleCollider capsule;
-    private bool isCrouching = false;
     private bool isRunning = false;
 
 
@@ -211,13 +210,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCrouchPerformed(InputAction.CallbackContext context)
     {
-        isCrouching = true;
         capsule.height = crouchHeight;
     }
 
     private void OnCrouchCanceled(InputAction.CallbackContext context)
     {
-        isCrouching = false;
         capsule.height = standHeight;
     }
 }

@@ -18,6 +18,9 @@ public class EventDialogueController : MonoBehaviour
             return;
         }
         instance = this;
+
+        originalPosition = playerCameraTransform.localPosition;
+        originalRotation = playerCameraTransform.localRotation;
     }
 
     public void OnDestroy()
@@ -41,13 +44,13 @@ public class EventDialogueController : MonoBehaviour
 
     public void ResetCameraStatic()
     {
-        playerCameraTransform.position = originalPosition;
-        playerCameraTransform.rotation = originalRotation;
+        playerCameraTransform.localPosition = originalPosition;
+        playerCameraTransform.localRotation = originalRotation;
     }
 
     IEnumerator AnimateLookAt(Transform target)
     {
-        originalRotation = playerCameraTransform.rotation;
+        Quaternion startRotation = playerCameraTransform.rotation;
         Quaternion targetRotation = Quaternion.LookRotation(target.position - playerCameraTransform.position);
 
         float elapsed = 0f;
@@ -58,7 +61,7 @@ public class EventDialogueController : MonoBehaviour
             float t = elapsed / duration;
             float easedT = 1f - Mathf.Pow(1f - t, 3f);
 
-            playerCameraTransform.rotation = Quaternion.Lerp(originalRotation, targetRotation, easedT);
+            playerCameraTransform.rotation = Quaternion.Lerp(startRotation, targetRotation, easedT);
 
             elapsed += Time.deltaTime;
             yield return null;

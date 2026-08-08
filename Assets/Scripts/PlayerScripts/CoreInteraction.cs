@@ -37,7 +37,7 @@ public class CoreInteraction : MonoBehaviour
 
     private void Update()
     {
-        if (DialogueController.instance.IsDialogueActive())
+        if (DialogueController.instance.IsDialogueActive() || DialogueController.instance.ConsumeJustEnded())
         {
             Debug.Log("CoreInteraction: dialogue active, skipping interact check");
             return;

@@ -23,8 +23,6 @@ MonoBehaviour:
         m_Calls: []
     cameraEvent: 0
     cameraTargetId: 
-    moveTargetId: 
-    lookTargetId: 
   - speakerName: Absolute Chad
     text: wyd.....................
     options: []
@@ -33,8 +31,6 @@ MonoBehaviour:
         m_Calls: []
     cameraEvent: 1
     cameraTargetId: lookpoint_1
-    moveTargetId: 
-    lookTargetId: 
   - speakerName: Absolute Chad
     text: ' im just an acbosdionoewu fnaoweunfhoweafn eujo9hnf 1-2389213 ][/][./\];[/=-./][123 '
     options: []
@@ -43,8 +39,6 @@ MonoBehaviour:
         m_Calls: []
     cameraEvent: 2
     cameraTargetId: lookpoint_1
-    moveTargetId: 
-    lookTargetId: 
   - speakerName: Absolute Chad
     text: take care
     options: []
@@ -53,18 +47,14 @@ MonoBehaviour:
         m_Calls: []
     cameraEvent: 5
     cameraTargetId: 
-    moveTargetId: 
-    lookTargetId: 
   - speakerName: Absolute Chad
     text: dumbass
     options: []
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 3
+    cameraEvent: 0
     cameraTargetId: 
-    moveTargetId: lookpoint_1
-    lookTargetId: player_look
   - speakerName: Absolute Chad
     text: what you looking around for
     options: []
@@ -73,15 +63,11 @@ MonoBehaviour:
         m_Calls: []
     cameraEvent: 0
     cameraTargetId: 
-    moveTargetId: 
-    lookTargetId: 
   - speakerName: Absolute Chad
     text: what you trying to do hey
     options: []
     eventAction:
       m_PersistentCalls:
         m_Calls: []
-    cameraEvent: 5
+    cameraEvent: 2
     cameraTargetId: 
-    moveTargetId: 
-    lookTargetId: 

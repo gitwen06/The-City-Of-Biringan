@@ -6,7 +6,7 @@ public class CameraTargetRegistry : MonoBehaviour
     //camera lookAt and moveAt registry since scriptableObjects doesnt allow gameobjects as input.
     public static CameraTargetRegistry instance;
 
-    public Dictionary<string, Transform> target = new Dictionary<string, Transform>();
+    private Dictionary<string, Transform> target = new Dictionary<string, Transform>();
     public void Awake()
     {
         if (instance != null && instance != this)
