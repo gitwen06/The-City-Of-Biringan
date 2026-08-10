@@ -9,6 +9,9 @@ public class CutsceneRunner : MonoBehaviour
     [SerializeField] private CinemachineBrain brain;
     [SerializeField] private Transform playerCameraTransform;
 
+    [SerializeField] private CinemachineCamera sharedTrackVCam;
+    [SerializeField] private CinemachineCamera sharedDollyVCam;
+
     private Vector3 originalCameraPosition;
     private Quaternion originalCameraRotation;
 
@@ -30,10 +33,10 @@ public class CutsceneRunner : MonoBehaviour
         if (instance == this) instance = null;
     }
 
-    public void Play(PlayableDirector director)
+    public void Play(CutsceneConfig config)
     {
         if (isPlaying) { return; }
-        Debug.Log("CutsceneRunner: Play called with director: " + director.name);
+        Debug.Log("CutsceneRunner: Playing '" + config.cutsceneName + "'");
 
         HUDController.instance.hideUINote();
         HUDController.instance.DisableInteractionText();
@@ -43,10 +46,20 @@ public class CutsceneRunner : MonoBehaviour
         FreezePlayer();
 
         isPlaying = true;
-        currentDirector = director;
+        currentDirector = config.director;
 
         originalCameraPosition = playerCameraTransform.localPosition;
         originalCameraRotation = playerCameraTransform.localRotation;
+
+        // only reassign a shared vcam's target if THIS cutscene actually specified one
+        if (config.trackTarget != null && sharedTrackVCam != null)
+        {
+            sharedTrackVCam.Follow = config.trackTarget;
+        }
+        if (config.DollyAtTarget != null && sharedDollyVCam != null)
+        {
+            sharedDollyVCam.LookAt = config.DollyAtTarget;
+        }
 
         brain.enabled = true;
         currentDirector.stopped += OnCutsceneStopped;
@@ -57,6 +70,7 @@ public class CutsceneRunner : MonoBehaviour
     {
         Debug.Log("OnCutsceneStopped fired");
         HUDController.instance.showUiNote();
+        HUDController.instance.ShowInteractionText();
         HUDController.instance.enableInventory();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

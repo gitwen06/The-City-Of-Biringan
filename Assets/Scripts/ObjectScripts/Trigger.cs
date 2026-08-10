@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Playables;
 
 public class Trigger : MonoBehaviour
 {
     public UnityEvent onTriggerEnter;
     public UnityEvent onTriggerExit;
 
-    [SerializeField] private PlayableDirector cutscene;
+    [SerializeField] private CutsceneConfig cutscene;
+
     private bool isPlayed;
     public Outline outline;
 
@@ -15,13 +15,14 @@ public class Trigger : MonoBehaviour
     {
         outline.enabled = false;
     }
+
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Trigger entered by: " + other.name);
         if (other.CompareTag("Player"))
         {
             onTriggerEnter.Invoke();
-            if (cutscene != null && !isPlayed)
+            if (cutscene != null && cutscene.director != null && !isPlayed)
             {
                 CutsceneRunner.instance.Play(cutscene);
                 isPlayed = true;
