@@ -70,7 +70,6 @@ public class CutsceneRunner : MonoBehaviour
     {
         Debug.Log("OnCutsceneStopped fired");
         HUDController.instance.showUiNote();
-        HUDController.instance.ShowInteractionText();
         HUDController.instance.enableInventory();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;

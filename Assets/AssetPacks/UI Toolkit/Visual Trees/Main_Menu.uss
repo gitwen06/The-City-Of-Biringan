@@ -1,0 +1,8 @@
+.header {
+    display: flex;
+    -unity-font-style: normal;
+    position: relative;
+    overflow: visible;
+    visibility: visible;
+    opacity: 1;
+}

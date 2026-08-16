@@ -212,12 +212,13 @@ public class DialogueController : MonoBehaviour
 
     IEnumerator Typing(DialogueNode node)
     {
+        float randomDuration = Random.Range(0.05f, 0.15f);
         isTyping = true;
         dialogueText.text = "";
 
         foreach (char s in node.text)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(randomDuration);
             dialogueText.text += s;
             if (s == '.' || s == ',')
             {
