@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class NoteController : MonoBehaviour
 {
@@ -7,8 +8,10 @@ public class NoteController : MonoBehaviour
 
     public bool isreading = false;
 
+    [SerializeField] public TMP_Text noteText;
+    [SerializeField] public Image noteBG;
+
     string text;
-    public TMP_Text noteText;
     bool isShowing = false;
     public void Awake()
     {
@@ -38,7 +41,7 @@ public class NoteController : MonoBehaviour
         if (noteText != null)
         {
             noteText.text = text;
-            noteText.gameObject.SetActive(isShowing);
+            noteBG.gameObject.SetActive(isShowing);
         }
         else
         {
@@ -74,14 +77,16 @@ public class NoteController : MonoBehaviour
         }
     }
 
-    
-
     private void OnDisable()
     {
         if (noteText != null)
         {
             noteText.text = "";
             noteText.gameObject.SetActive(false);
+        }
+        if (noteBG != null)
+        {
+            noteBG.gameObject.SetActive(false);
         }
     }
 
@@ -97,6 +102,7 @@ public class NoteController : MonoBehaviour
         }
 
         noteText.text = newText;
+        noteBG.gameObject.SetActive(isShowing);
         noteText.gameObject.SetActive(isShowing);
 
         if (isShowing)
