@@ -44,7 +44,7 @@ public class CoreInteraction : MonoBehaviour
         }
 
         CheckInteraction();
-        if (inputActions.Player.Interact.WasPressedThisFrame() && !GameFlags.instance.GetFlag("isGamePaused"))
+        if (inputActions.Player.Interact.WasPressedThisFrame() && !GameFlags.instance.GetFlag("isGamePaused") && !NoteController.instance.IsReading() && !CutsceneRunner.instance.IsPlaying() && !DialogueController.instance.IsDialogueActive())
         {
             if (currentInteractable != null)
             {

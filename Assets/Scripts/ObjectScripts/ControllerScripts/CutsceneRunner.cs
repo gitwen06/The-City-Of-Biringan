@@ -84,6 +84,10 @@ public class CutsceneRunner : MonoBehaviour
         isPlaying = false;
     }
 
+    public bool IsPlaying()
+    {
+        return isPlaying;
+    }
     // Freeze player input (called when opening a note)
     public void FreezePlayer()
     {

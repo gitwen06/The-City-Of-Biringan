@@ -101,6 +101,7 @@ public class DialogueController : MonoBehaviour
                     }
                 }
             }
+ 
         }
     }
 
@@ -209,6 +210,7 @@ public class DialogueController : MonoBehaviour
     {
         return currentDialogue != null;
     }
+
 
     IEnumerator Typing(DialogueNode node)
     {

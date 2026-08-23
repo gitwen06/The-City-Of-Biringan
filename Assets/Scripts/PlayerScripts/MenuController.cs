@@ -5,9 +5,9 @@ public class MenuController : MonoBehaviour
 {
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject HUDUI;
+    [SerializeField] private GameObject SaveHUD;
 
     private InputSystem_Actions inputActions;
-
     void Awake()
     {
         inputActions = new InputSystem_Actions();
@@ -62,9 +62,9 @@ public class MenuController : MonoBehaviour
         GameFlags.instance.SetFlag("isGamePaused", false);
     }
 
-    public void OnSaveGame()
+    public void OpenSaveHUD()
     {
-        Debug.Log("saved (Experimental)");
+        SaveHUD.SetActive(true);
     }
 
     public void OnQuitGame()
