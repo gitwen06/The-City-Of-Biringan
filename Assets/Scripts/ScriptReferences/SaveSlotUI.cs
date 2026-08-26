@@ -77,6 +77,11 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         rectTransform.anchoredPosition = targetPos;
     }
 
+    public void UpdateIndex(int newIndex)
+    {
+        slotIndex = newIndex;
+    }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         if(hoverCoroutine != null)

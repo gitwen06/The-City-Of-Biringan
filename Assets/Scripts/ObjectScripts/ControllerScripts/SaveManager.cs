@@ -1,16 +1,25 @@
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
 
 public class SaveManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private List<SaveSlot> SaveMetadataSlots = new List<SaveSlot>();
+
+    public static SaveManager instance;
+
+    public void Awake()
     {
-        
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    public List<SaveSlot> GetAllSaveMetaData()
     {
-        
+        return SaveMetadataSlots;
     }
 }
