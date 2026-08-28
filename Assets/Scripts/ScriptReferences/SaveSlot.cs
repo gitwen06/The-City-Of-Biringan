@@ -1,6 +1,6 @@
 using UnityEngine;
-using TMPro;
 
+[System.Serializable]
 public class SaveSlot
 {
     public string saveName;
