@@ -29,7 +29,7 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     public void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
-        if(outline != null)
+        if (outline != null)
         {
             outline.enabled = false;
         }
@@ -49,6 +49,11 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
         originalScale = rectTransform.localScale;
         originalPosition = rectTransform.anchoredPosition;
+    }
+
+    public int GetSlotIndex()
+    {
+        return slotIndex;
     }
 
     IEnumerator HoverAnim(bool isHovering)
@@ -84,7 +89,7 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if(hoverCoroutine != null)
+        if (hoverCoroutine != null)
         {
             StopCoroutine(hoverCoroutine); // if coroutine exist stop
         }
@@ -100,7 +105,9 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         hoverCoroutine = StartCoroutine(HoverAnim(false));
     }
 
-    public void OnPointerClick(PointerEventData eventData) {
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (controller == null) { return; }
         controller.SelectSlot(slotIndex);
     }
 

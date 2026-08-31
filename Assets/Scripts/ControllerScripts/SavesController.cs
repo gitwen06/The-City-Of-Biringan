@@ -1,7 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class SavesController : MonoBehaviour
 {
@@ -12,15 +13,18 @@ public class SavesController : MonoBehaviour
 
     [SerializeField] private GameObject renameUI;
     [SerializeField] private TMP_InputField renameInputField;
+
     [SerializeField] private GameObject renameBtn;
     [SerializeField] private GameObject deleteBtn;
+
+    private enum PopupMode { None, Rename, NewSave }
+    private PopupMode currentPopupMode = PopupMode.None;
 
     private string renameName;
 
     private List<SaveSlot> saves = new List<SaveSlot>();
     private List<SaveSlotUI> saveSlotUI = new List<SaveSlotUI>();
     public int selectedSlotIndex = -1;
-    public int prevSlotIndex = -1;
     public static SavesController instance;
 
     [SerializeField] private SaveSlotUI saveSlotUIprefab;
@@ -64,17 +68,18 @@ public class SavesController : MonoBehaviour
 
     public void SelectSlot(int slotIndex)
     {
-        prevSlotIndex = selectedSlotIndex;
         selectedSlotIndex = slotIndex;
-        // deselect previous slot if it exists (if not -1)
-        if (prevSlotIndex != -1 && prevSlotIndex < saveSlotUI.Count)
+
+        foreach (var slotUI in saveSlotUI)
         {
-            saveSlotUI[prevSlotIndex].Deselect();
-        }
-        // select new slot
-        if (selectedSlotIndex != -1 && selectedSlotIndex < saveSlotUI.Count)
-        {
-            saveSlotUI[selectedSlotIndex].Select();
+            if (slotUI.GetSlotIndex() == slotIndex)
+            {
+                slotUI.Select();
+            }
+            else
+            {
+                slotUI.Deselect();
+            }
         }
 
         UpdateSecondaryButtonsVisibility();
@@ -101,19 +106,22 @@ public class SavesController : MonoBehaviour
         for (int i = 0; i < saves.Count; i++)
         {
             SaveSlotUI slotUI = Instantiate(saveSlotUIprefab, saveSlotBG.transform);
-            slotUI.Setup(saves[i], i, this);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(saveSlotBG.GetComponent<RectTransform>());
+            slotUI.Setup(saves[i], saves[i].slotIndex, this);
             saveSlotUI.Add(slotUI);
         }
 
+        newSlot.transform.SetAsLastSibling();
+
         // if saves less than 5, show the new slot button or gameobject whatever, else hide it
         UpdateNewSlotVisibility();
+        UpdateSecondaryButtonsVisibility();
     }
 
     public void OnHide()
     {
         saveHUD.SetActive(false);
         selectedSlotIndex = -1;
-        prevSlotIndex = -1;
         foreach (var slotUI in saveSlotUI)
         {
             slotUI.Deselect();
@@ -126,32 +134,104 @@ public class SavesController : MonoBehaviour
         UpdateSecondaryButtonsVisibility();
     }
 
+    public void OnPopUpSubmit()
+    {
+        if (currentPopupMode == PopupMode.Rename)
+        {
+            ConfirmRename();
+        }
+        else if (currentPopupMode == PopupMode.NewSave)
+        {
+            ConfirmNewSave();
+        }
+    }
+
+    public void ConfirmNewSave()
+    {
+        string newName = renameInputField.text;
+        if (string.IsNullOrEmpty(newName)) { return; }
+
+        int index = SaveManager.instance.FindNextFreeSlot();
+        if (index == -1) { return; }
+
+        SaveSlot metadata = new SaveSlot();
+        metadata.saveName = newName;
+        metadata.saveDate = System.DateTime.Now.ToString();
+        metadata.slotIndex = index;
+        metadata.isAutosave = false;
+
+        SaveData data = SaveManager.instance.CaptureCurrentState(metadata);
+        SaveManager.instance.SaveToSlot(index, data);
+
+        currentPopupMode = PopupMode.None;
+        renameUI.SetActive(false);
+        PopulateSlots();
+    }
+
+    public void ConfirmRename()
+    {
+        string newName = renameInputField.text;
+        if (!string.IsNullOrEmpty(newName))
+        {
+            SaveManager.instance.RenameFile(selectedSlotIndex, newName);
+            currentPopupMode = PopupMode.None;
+            PopulateSlots();
+            renameUI.SetActive(false);
+        }
+    }
+
+    public void CancelRename()
+    {
+        renameUI.SetActive(false);
+        currentPopupMode = PopupMode.None;
+    }
+
+    public void OnNewSlotClicked()
+    {
+        currentPopupMode = PopupMode.NewSave;
+        renameUI.SetActive(true);
+        renameInputField.text = "";
+    }
+
     //Called from "Load" btn
     public void OnLoadClicked()
     {
-        if(selectedSlotIndex == -1) { return; }
-        Debug.Log($"load slot {selectedSlotIndex}");
+        if (selectedSlotIndex == -1) { return; }
+        SaveManager.instance.StartCoroutine(SaveManager.instance.LoadSlotAndApply(selectedSlotIndex));
     }
 
     //Called from "Save" btn
     public void OnSaveClicked()
     {
-        if (selectedSlotIndex == -1) { return; }
         //only appears when selected slot != -1.
+        //call capturecurrentstate in savemanager to get savedata
         //overwrite current selected savefile if selectedSlotIndex != -1, else create new savefile
+        if (selectedSlotIndex == -1) { return; }
 
+        SaveSlot metadata = new SaveSlot();
+        metadata.saveName = "Save File " + selectedSlotIndex;
+        metadata.saveDate = System.DateTime.Now.ToString();
+        metadata.slotIndex = selectedSlotIndex;
+        metadata.isAutosave = false;
+
+        SaveData data = SaveManager.instance.CaptureCurrentState(metadata);
+        SaveManager.instance.SaveToSlot(selectedSlotIndex, data);
+
+        PopulateSlots();
     }
 
     //Called from "Rename" btn
     public void OnRenameClicked()
     {
+        if (selectedSlotIndex == -1) { return; }
         //only appears when selected slot != -1;
         renameUI.SetActive(true);
         // renameName = inputfield text
         //wait for user to click either confirm or cancel.
         //if confirm, use renameName to rename saveslot., if cancel, toggle visibility, reset renameName to empty string
-
-        renameName = "";
+        currentPopupMode = PopupMode.Rename;
+        renameUI.SetActive(true);
+        renameInputField.text = "";
     }
 
     //called from "Delete"btn
@@ -159,19 +239,10 @@ public class SavesController : MonoBehaviour
     {
         if (selectedSlotIndex == -1) { return; }
 
-        saves.RemoveAt(selectedSlotIndex);
-
-        Destroy(saveSlotUI[selectedSlotIndex].gameObject);
-        saveSlotUI.RemoveAt(selectedSlotIndex);
-
-        for (int i = 0; i < saveSlotUI.Count; i++)
-        {
-            saveSlotUI[i].UpdateIndex(i); //resync index of each slotUI after deletion
-        }
+        SaveManager.instance.DeleteDisk(selectedSlotIndex);
 
         selectedSlotIndex = -1;
 
-        UpdateNewSlotVisibility();
-        UpdateSecondaryButtonsVisibility();
+        PopulateSlots();
     }
 }

@@ -39,9 +39,9 @@ public class CoreInventoryController : MonoBehaviour
         instance = this;
 
         //get all the images in the toolbar and main inventory and add them to the itemUIList of toolbar
-        Image[] toolbarImages = Toolbar.GetComponentsInChildren<Image>();
+        Image[] toolbarImages = Toolbar.GetComponentsInChildren<Image>(true);
 
-        for(int i = 0; i <  toolbarImages.Length; i++)
+        for (int i = 0; i < toolbarImages.Length; i++)
         {
             InventorySlotUI slotUI = new InventorySlotUI();
             slotUI.inventorySlotImage = toolbarImages[i];
@@ -53,9 +53,9 @@ public class CoreInventoryController : MonoBehaviour
         }
 
         //get all the images in the main inventory and add them to the itemUIList of MainInventory
-        Image[] MainInventoryImages = MainInventory.GetComponentsInChildren<Image>();
+        Image[] MainInventoryImages = MainInventory.GetComponentsInChildren<Image>(true);
 
-        for(int i = 0; i <  MainInventoryImages.Length; i++)
+        for (int i = 0; i < MainInventoryImages.Length; i++)
         {
             InventorySlotUI slotUI = new InventorySlotUI();
             slotUI.inventorySlotImage = MainInventoryImages[i];
@@ -117,7 +117,7 @@ public class CoreInventoryController : MonoBehaviour
 
     private void OnSelectSlot(InputAction.CallbackContext context)
     {
-        if(!Toolbar.activeInHierarchy) { return; }
+        if (!Toolbar.activeInHierarchy) { return; }
 
         string inputName = context.control.name;
         int inputNameInt = int.Parse(inputName); //convert "1" to 1
@@ -144,7 +144,7 @@ public class CoreInventoryController : MonoBehaviour
                 int amountToAdd = Mathf.Min(room, remaining); //return which one is smaller
                 itemList[i].quantity += amountToAdd;
                 remaining -= amountToAdd;
-                if(remaining <= 0)
+                if (remaining <= 0)
                 {
                     UpdateInventoryUI();
                     return;
@@ -207,7 +207,7 @@ public class CoreInventoryController : MonoBehaviour
 
     public void UseSelectedItem()
     {
-        if(selectedSlot >= 0 && selectedSlot < itemList.Count && itemList[selectedSlot] != null)
+        if (selectedSlot >= 0 && selectedSlot < itemList.Count && itemList[selectedSlot] != null)
         {
             itemList[selectedSlot].item.Use();
         }
@@ -234,9 +234,9 @@ public class CoreInventoryController : MonoBehaviour
 
     public void UpdateSelectionHightlight()
     {
-        for(int i = 0; i < toolbarSlots + mainInventroySlots; i++)
+        for (int i = 0; i < toolbarSlots + mainInventroySlots; i++)
         {
-            if(i == selectedSlot)
+            if (i == selectedSlot)
             {
                 itemUIList[i].outline.effectDistance = new Vector2(4f, 4f); // thicker
                 itemUIList[i].inventorySlotImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
@@ -252,7 +252,7 @@ public class CoreInventoryController : MonoBehaviour
 
     public void UpdateInventoryUI()
     {
-        for(int i = 0; i < toolbarSlots + mainInventroySlots; i++)
+        for (int i = 0; i < toolbarSlots + mainInventroySlots; i++)
         {
             if (itemList[i] != null)
             {
@@ -267,6 +267,36 @@ public class CoreInventoryController : MonoBehaviour
         }
         UpdateHandDisplay();
         UpdateSelectionHightlight();
+    }
+
+    public List<InventoryEntry> GetInventorySaveData()
+    {
+        List<InventoryEntry> items = new List<InventoryEntry>();
+
+        for (int i = 0; i < itemList.Count; i++)
+        {
+            if (itemList[i] != null)
+            {
+                InventoryEntry entry = new InventoryEntry();
+                entry.slotIndex = i;
+                entry.itemId = itemList[i].item.id;
+                entry.quantity = itemList[i].quantity;
+
+                items.Add(entry);
+            }
+        }
+
+        return items;
+    }
+
+    public void SetItemAtSlot(int slotIndex, ItemScriptableObject item, int quantity)
+    {
+        InventorySlot slot = new InventorySlot();
+        slot.quantity = quantity;
+        slot.item = item;
+
+        itemList[slotIndex] = slot;
+        UpdateInventoryUI();
     }
 
     //for checking if item is useable even if palyer is not facing something
@@ -286,7 +316,7 @@ public class CoreInventoryController : MonoBehaviour
     //called by draggable slot(for reference)
     public ItemScriptableObject GetItemAtSlot(int slot)
     {
-        if(itemList[slot] != null)
+        if (itemList[slot] != null)
         {
             return itemList[slot].item;
         }

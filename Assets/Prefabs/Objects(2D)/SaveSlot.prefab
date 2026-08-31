@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 7991776858390174161}
   - component: {fileID: 2625021532637344840}
   - component: {fileID: 2425609205291101517}
+  - component: {fileID: 8522829940318275729}
   m_Layer: 5
   m_Name: SaveSlot
   m_TagString: Untagged
@@ -278,6 +279,24 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8522829940318275729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2359533269264854560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edd9f8a715b06694ea24a315357321ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SaveSlotUI
+  saveName: {fileID: 593280076591931686}
+  saveQuest: {fileID: 7605841386082567611}
+  saveDate: {fileID: 2812059078084748306}
+  saveGenArea: {fileID: 6449790572966128904}
+  savedBy: {fileID: 5214214166051055402}
+  outline: {fileID: 2625021532637344840}
 --- !u!1 &3026898910720183251
 GameObject:
   m_ObjectHideFlags: 0

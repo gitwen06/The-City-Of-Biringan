@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
-    public static PlayerHealth Instance;
     [SerializeField] private Slider healthSlider;
     [SerializeField] private Canvas HUD;
     [SerializeField] private Canvas deathHUD;
@@ -13,12 +12,28 @@ public class PlayerHealth : MonoBehaviour
 
     private float currentHealth;
 
+    public static PlayerHealth instance;
+
     public void Awake()
     {
-        Instance = this;
         currentHealth = maxHealth;
         healthSlider.maxValue = maxHealth;
         healthSlider.value = currentHealth;
+
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+
+    public void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 
     private void Start()
@@ -70,6 +85,20 @@ public class PlayerHealth : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene(1);
+    }
+
+    public float GetHealth()
+    {
+        return currentHealth;
+    }
+
+    public void SetHealth(float value)
+    {
+        currentHealth = value;
+        if (healthSlider != null)
+        {
+            healthSlider.value = currentHealth;
+        }
     }
 
     public void FreezePlayer()

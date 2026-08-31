@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class ItemDatabase : ScriptableObject
 {
     public List<ItemScriptableObject> items;
-    public Dictionary<string, ItemScriptableObject> itemsDictionary;
+    private Dictionary<string, ItemScriptableObject> itemsDictionary;
 
     public void OnEnable()
     {

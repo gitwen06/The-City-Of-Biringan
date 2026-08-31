@@ -65,12 +65,14 @@ public class MenuController : MonoBehaviour
     public void OpenSaveHUD()
     {
         SaveHUD.SetActive(true);
+        SavesController.instance.PopulateSlots();
     }
 
     public void OnQuitGame()
     {
         Time.timeScale = 1f;
-        PlayerHealth.Instance.ReturnToMainMenu();
+        SaveManager.instance.PerformAutosave();
+        PlayerHealth.instance.ReturnToMainMenu();
     }
 
     public void FreezePlayer()

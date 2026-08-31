@@ -43,7 +43,6 @@ public class PlayerMovement : MonoBehaviour
     private bool isRunning = false;
 
 
-
     private InputSystem_Actions inputActions;
     private Rigidbody rb;
     private Vector2 moveInput;
@@ -51,12 +50,27 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 move;
     private bool isFrozen = false;
 
+    public static PlayerMovement instance;
 
     private void Awake()
     {
         inputActions = new InputSystem_Actions();
         rb = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        instance = this;
+    }
+
+    public void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
     }
 
     private void OnEnable()
@@ -216,5 +230,29 @@ public class PlayerMovement : MonoBehaviour
     private void OnCrouchCanceled(InputAction.CallbackContext context)
     {
         capsule.height = standHeight;
+    }
+
+    public float GetStamina()
+    {
+        return currentStamina;
+    }
+
+    public void SetStamina(float stam)
+    {
+        currentStamina = stam;
+        if (playerStamina != null)
+        {
+            playerStamina.value = currentStamina;
+        }
+    }
+
+    public Transform GetPlayerTransform()
+    {
+        return transform;
+    }
+
+    public Transform GetPlayerCameraTransform()
+    {
+        return cameraTransform;
     }
 }
