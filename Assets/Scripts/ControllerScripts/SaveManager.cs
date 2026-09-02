@@ -41,6 +41,9 @@ public class SaveManager : MonoBehaviour
     public void PerformAutosave()
     {
         int targetSlot = (currentActiveSlot == -1) ? FindNextFreeSlot() : currentActiveSlot;
+        Scene currentScene = SceneManager.GetActiveScene();
+        string sceneName = currentScene.name;
+        if (sceneName == "MainMenuScene") { return; }
         if (targetSlot == -1) { return; }
 
         SaveSlot metadata = new SaveSlot();
@@ -158,6 +161,12 @@ public class SaveManager : MonoBehaviour
 
     public SaveData CaptureCurrentState(SaveSlot metaData)
     {
+        if (CoreInventoryController.instance == null || PlayerHealth.instance == null || PlayerMovement.instance == null)
+        {
+            Debug.LogWarning("CaptureCurrentState: scene objects not ready, skipping save.");
+            return null;
+        }
+
         Scene currentScene = SceneManager.GetActiveScene();
         string sceneName = currentScene.name;
         int sceneBuildIndex = currentScene.buildIndex;
@@ -203,6 +212,8 @@ public class SaveManager : MonoBehaviour
         {
             yield return null;
         }
+
+        yield return null; //make sure scene is really realy erlly really loaded
 
         Transform playerT = PlayerMovement.instance.GetPlayerTransform();
         playerT.position = data.playerPosition;

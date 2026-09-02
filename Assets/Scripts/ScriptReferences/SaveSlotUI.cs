@@ -14,8 +14,8 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private TMP_Text savedBy;
     [SerializeField] private UnityEngine.UI.Outline outline;
 
-    private float hoverScale = 1.2f;
-    private float hoverYOffset = 10f;
+    private float hoverScale = 1.05f;
+    private float hoverYOffset = -1.5f;
     private float animDuration = 0.25f;
 
     private RectTransform rectTransform;
@@ -33,6 +33,7 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             outline.enabled = false;
         }
+        Debug.Log("Loaded SaveSlotUI");
     }
 
     public void Setup(SaveSlot saveSlot, int index, SavesController savesController)
@@ -58,6 +59,7 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     IEnumerator HoverAnim(bool isHovering)
     {
+        Debug.Log($"HoverAnim started: isHovering = {isHovering}");
         Vector3 startScale = rectTransform.localScale;
         Vector2 startPos = rectTransform.anchoredPosition;
 
@@ -91,6 +93,7 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (hoverCoroutine != null)
         {
+            Debug.Log("Pointer Eneterd");
             StopCoroutine(hoverCoroutine); // if coroutine exist stop
         }
         hoverCoroutine = StartCoroutine(HoverAnim(true));
@@ -100,6 +103,7 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         if (hoverCoroutine != null)
         {
+            Debug.Log("Pointer Exited");
             StopCoroutine(hoverCoroutine); // if coroutine exist stop
         }
         hoverCoroutine = StartCoroutine(HoverAnim(false));

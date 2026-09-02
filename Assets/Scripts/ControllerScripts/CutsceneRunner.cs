@@ -2,6 +2,10 @@ using UnityEngine;
 using UnityEngine.Playables;
 using Unity.Cinemachine;
 
+/* TO DO IN CUTSCENERUNNER:
+ * Check if the cutscene has been played before in gameflags, if played skip.
+ * fix 1s delay when ending cutscene
+ */
 public class CutsceneRunner : MonoBehaviour
 {
     public static CutsceneRunner instance;

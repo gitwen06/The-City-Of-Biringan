@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SavesController : MonoBehaviour
 {
@@ -206,10 +207,14 @@ public class SavesController : MonoBehaviour
         //only appears when selected slot != -1.
         //call capturecurrentstate in savemanager to get savedata
         //overwrite current selected savefile if selectedSlotIndex != -1, else create new savefile
-        if (selectedSlotIndex == -1) { return; }
+        Scene currentScene = SceneManager.GetActiveScene();
+        string sceneName = currentScene.name;
+        if (selectedSlotIndex == -1 || sceneName == "MainMenuScene") { return; }
+
+        SaveData existing = SaveManager.instance.ReadDisk(selectedSlotIndex);
 
         SaveSlot metadata = new SaveSlot();
-        metadata.saveName = "Save File " + selectedSlotIndex;
+        metadata.saveName = (existing != null) ? existing.metaData.saveName : "Save File " + selectedSlotIndex;
         metadata.saveDate = System.DateTime.Now.ToString();
         metadata.slotIndex = selectedSlotIndex;
         metadata.isAutosave = false;

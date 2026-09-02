@@ -72,6 +72,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void ShowDeathHUD()
     {
+        GameFlags.instance.SetFlag("isPlayerDead", true);
         HUD.gameObject.SetActive(false);
         deathHUD.gameObject.SetActive(true);
         FreezePlayer();
@@ -84,6 +85,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void Restart()
     {
+
         SceneManager.LoadScene(1);
     }
 

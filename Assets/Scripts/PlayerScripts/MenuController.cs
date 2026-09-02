@@ -24,7 +24,7 @@ public class MenuController : MonoBehaviour
     {
         if (inputActions != null)
         {
-            if (inputActions.Player.Menu.WasPressedThisFrame() && !DialogueController.instance.IsDialogueActive() && !NoteController.instance.IsReading())
+            if (inputActions.Player.Menu.WasPressedThisFrame() && !DialogueController.instance.IsDialogueActive() && !NoteController.instance.IsReading() && !GameFlags.instance.GetFlag("isPlayerDead"))
             {
                 if (GameFlags.instance.GetFlag("isGamePaused"))
                 {

@@ -8,6 +8,11 @@ using TMPro;
 using System.Linq;
 using Unity.VisualScripting;
 
+/*TODO IN COREINVENTORYCONTROLLER:
+ *Set up a gameflag for each gameobject item in scene so that when the player picks it up it is removed from the scene and when the player loads a save
+ *it checks if the gameflag is set and if so it does not spawn the item in the scene. -- WORK IN PROGRESS
+ */
+
 public class CoreInventoryController : MonoBehaviour
 {
     [SerializeField] private GameObject Toolbar;
@@ -35,8 +40,14 @@ public class CoreInventoryController : MonoBehaviour
 
     private void Awake()
     {
-        inputActions = new InputSystem_Actions();
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
         instance = this;
+
+        inputActions = new InputSystem_Actions();
 
         //get all the images in the toolbar and main inventory and add them to the itemUIList of toolbar
         Image[] toolbarImages = Toolbar.GetComponentsInChildren<Image>(true);
@@ -45,8 +56,8 @@ public class CoreInventoryController : MonoBehaviour
         {
             InventorySlotUI slotUI = new InventorySlotUI();
             slotUI.inventorySlotImage = toolbarImages[i];
-            slotUI.amountText = toolbarImages[i].GetComponentInChildren<TextMeshProUGUI>();
-            slotUI.outline = toolbarImages[i].GetComponentInChildren<UnityEngine.UI.Outline>();
+            slotUI.amountText = toolbarImages[i].GetComponentInChildren<TextMeshProUGUI>(true);
+            slotUI.outline = toolbarImages[i].GetComponentInChildren<UnityEngine.UI.Outline>(true);
             DraggableSlot dragSlot = toolbarImages[i].GetComponent<DraggableSlot>();
             dragSlot.slotIndex = i;
             itemUIList.Add(slotUI);
@@ -59,17 +70,27 @@ public class CoreInventoryController : MonoBehaviour
         {
             InventorySlotUI slotUI = new InventorySlotUI();
             slotUI.inventorySlotImage = MainInventoryImages[i];
-            slotUI.amountText = MainInventoryImages[i].GetComponentInChildren<TextMeshProUGUI>();
-            slotUI.outline = MainInventoryImages[i].GetComponentInChildren<UnityEngine.UI.Outline>();
+            slotUI.amountText = MainInventoryImages[i].GetComponentInChildren<TextMeshProUGUI>(true);
+            slotUI.outline = MainInventoryImages[i].GetComponentInChildren<UnityEngine.UI.Outline>(true);
             DraggableSlot dragSlot = MainInventoryImages[i].GetComponent<DraggableSlot>();
             dragSlot.slotIndex = toolbarSlots + i;
             itemUIList.Add(slotUI);
         }
 
+        //DEBUG INVENTORY BECAUSE EVERYTHING IS GOING NULL FOR SOME REASON
+        //turns out item database was the problem i dont know if i should keep this debug log but it might be useful for future debugging
+        Debug.Log($"toolbarImages.Length = {toolbarImages.Length}, MainInventoryImages.Length = {MainInventoryImages.Length}, itemUIList.Count = {itemUIList.Count}");
+        for (int i = 0; i < itemUIList.Count; i++)
+        {
+            string imgName = itemUIList[i].inventorySlotImage != null ? itemUIList[i].inventorySlotImage.name : "NULL-IMAGE";
+            string amtStatus = itemUIList[i].amountText == null ? "NULL" : "ok";
+            string outlineStatus = itemUIList[i].outline == null ? "NULL" : "ok";
+            Debug.Log($"[{i}] image={imgName}, amountText={amtStatus}, outline={outlineStatus}");
+        }
+
         DraggableSlot.SetGhostImage(ghostImageSource);
-
     }
-
+  
     public void Start()
     {
         UpdateInventoryUI();
@@ -254,6 +275,13 @@ public class CoreInventoryController : MonoBehaviour
     {
         for (int i = 0; i < toolbarSlots + mainInventroySlots; i++)
         {
+            //check for every null entry cuz everything is going null i guess????
+            if (itemUIList[i].inventorySlotImage == null) { Debug.LogError($"inventorySlotImage null at {i}"); continue; }
+            if (itemUIList[i].amountText == null) { Debug.LogError($"amountText null at {i}"); continue; }
+            if (itemList[i] != null && itemList[i].item == null) { Debug.LogError($"itemList[{i}].item is null despite non-null slot"); continue; }
+            if (itemList[i] != null && itemList[i].item != null && itemList[i].item.Icon == null) { Debug.LogError($"item.Icon null at {i}, item name: {itemList[i].item.name}"); }
+            if (placeholderImage == null) { Debug.LogError("placeholderImage itself is null!"); }
+
             if (itemList[i] != null)
             {
                 itemUIList[i].inventorySlotImage.sprite = itemList[i].item.Icon;
@@ -291,6 +319,12 @@ public class CoreInventoryController : MonoBehaviour
 
     public void SetItemAtSlot(int slotIndex, ItemScriptableObject item, int quantity)
     {
+        if (slotIndex < 0 || slotIndex >= itemList.Count || itemUIList.Count < itemList.Count)
+        {
+            Debug.LogWarning($"SetItemAtSlot: not ready or out of range at index {slotIndex}");
+            return;
+        }
+
         InventorySlot slot = new InventorySlot();
         slot.quantity = quantity;
         slot.item = item;

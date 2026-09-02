@@ -28,12 +28,23 @@ public class GameFlags : MonoBehaviour
     public void SetFlag(string key, bool value)
     {
         flags[key] = value;
+
+        foreach(KeyValuePair<string, bool> flag in flags)
+        {
+            Debug.Log($"GameFlags: {flag.Key} = {flag.Value}");
+        }
     }
 
     public bool GetFlag(string key)
     {
         bool value;
         bool wasFound = flags.TryGetValue(key, out value);
+
+        foreach (KeyValuePair<string, bool> flag in flags)
+        {
+            Debug.Log($"GameFlags: {flag.Key} = {flag.Value}");
+        }
+
         return wasFound ? value : false;
     }
 }
