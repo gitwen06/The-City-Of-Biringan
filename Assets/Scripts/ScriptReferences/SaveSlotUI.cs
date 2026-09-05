@@ -14,13 +14,11 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     [SerializeField] private TMP_Text savedBy;
     [SerializeField] private UnityEngine.UI.Outline outline;
 
-    private float hoverScale = 1.05f;
-    private float hoverYOffset = -1.5f;
-    private float animDuration = 0.25f;
+    private const float hoverScale = 1.05f;
+    private const float animDuration = 0.25f;
 
     private RectTransform rectTransform;
     private Vector3 originalScale;
-    private Vector2 originalPosition;
     private Coroutine hoverCoroutine;
 
     private int slotIndex;
@@ -33,6 +31,12 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         {
             outline.enabled = false;
         }
+
+        if(rectTransform == null)
+        {
+            Debug.LogError("RectTransform is not assigned in SaveSlotUI.");
+        }
+
         Debug.Log("Loaded SaveSlotUI");
     }
 
@@ -49,7 +53,7 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
         controller = savesController;
 
         originalScale = rectTransform.localScale;
-        originalPosition = rectTransform.anchoredPosition;
+        Debug.Log(originalScale);
     }
 
     public int GetSlotIndex()
@@ -59,29 +63,22 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
 
     IEnumerator HoverAnim(bool isHovering)
     {
-        Debug.Log($"HoverAnim started: isHovering = {isHovering}");
         Vector3 startScale = rectTransform.localScale;
-        Vector2 startPos = rectTransform.anchoredPosition;
-
         Vector3 targetScale = isHovering ? originalScale * hoverScale : originalScale;
-        Vector2 targetPos = isHovering ? originalPosition + new Vector2(0, hoverYOffset) : originalPosition;
+        Debug.Log($"StartScale: {startScale}, TargetScale: {targetScale}");
 
         float elapsed = 0f;
-
         while (elapsed < animDuration)
         {
+            Debug.Log($"Elapsed: {elapsed}, animDuration: {animDuration}"); //gahdaym for 3 hours this was the problem????
             float t = elapsed / animDuration;
             float easedT = 1f - Mathf.Pow(1f - t, 3f);
-
             rectTransform.localScale = Vector3.Lerp(startScale, targetScale, easedT);
-            rectTransform.anchoredPosition = Vector2.Lerp(startPos, targetPos, easedT);
-
-            elapsed += Time.deltaTime;
+            elapsed += 0.016f; //deltatime paused during pause so elapsed is not increasing at all. so lets assume we run at 60fps i guess goddaym ts pmo
             yield return null;
         }
-
         rectTransform.localScale = targetScale;
-        rectTransform.anchoredPosition = targetPos;
+        Debug.Log($"LocalScale: {rectTransform.localScale}. targetscale: {targetScale}");
     }
 
     public void UpdateIndex(int newIndex)
