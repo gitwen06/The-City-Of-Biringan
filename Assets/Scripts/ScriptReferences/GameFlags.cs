@@ -1,12 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
+using System.Collections;
 
 public class GameFlags : MonoBehaviour
 {
     private Dictionary<string, bool> flags = new Dictionary<string, bool>();
 
     public static GameFlags instance;
+
+    private InputSystem_Actions inputActions;
 
     public void Awake()
     {
@@ -16,6 +18,38 @@ public class GameFlags : MonoBehaviour
             return;
         }
         instance = this;
+        inputActions = new InputSystem_Actions();
+    }
+
+    public void Update()
+    {
+        if (inputActions.Player.AddFlagTest1.WasPressedThisFrame())
+        {
+            SetFlag("TestFlag", true);
+            Debug.Log("[GameFlags] TestFlag set to true.");
+        }
+        if (inputActions.Player.AddFlagTest2.WasPressedThisFrame())
+        {
+            SetFlag("TestFlag", false);
+            Debug.Log("[GameFlags] TestFlag set to false.");
+        }
+        if (inputActions.Player.StartTestCoroutine.WasPressedThisFrame())
+        {
+            StartCoroutine(Start());
+        }
+
+
+    }
+
+    IEnumerator Start()
+    {
+        while (true) { 
+            yield return new WaitForSeconds(5.0f);
+            foreach (var kvp in flags)
+            {
+                Debug.Log($"[GameFlags] Flag: {kvp.Key}, Value: {kvp.Value}");
+            }
+        }
     }
 
     public void OnDestroy()
@@ -29,22 +63,12 @@ public class GameFlags : MonoBehaviour
     public void SetFlag(string key, bool value)
     {
         flags[key] = value;
-
-        foreach (KeyValuePair<string, bool> flag in flags)
-        {
-            Debug.Log($"GameFlags: {flag.Key} = {flag.Value}");
-        }
     }
 
     public bool GetFlag(string key)
     {
         bool value;
         bool wasFound = flags.TryGetValue(key, out value);
-
-        foreach (KeyValuePair<string, bool> flag in flags)
-        {
-            Debug.Log($"GameFlags: {flag.Key} = {flag.Value}");
-        }
 
         return wasFound ? value : false;
     }
@@ -54,23 +78,30 @@ public class GameFlags : MonoBehaviour
     {
         List<FlagEntry> flagEntries = new List<FlagEntry>();
 
-        for (int i = 0; i < flags.Count; i++)
+        foreach (var kvp in flags)
         {
             FlagEntry entry = new FlagEntry();
-            entry.flagName = flags.ElementAt(i).Key;
-            entry.flagValue = flags.ElementAt(i).Value;
+            entry.flagName = kvp.Key;
+            entry.flagValue = kvp.Value;
             flagEntries.Add(entry);
         }
+
         return flagEntries;
     }
 
     //populate flags from parameter(Called by SaveManager)
     public void LoadFlagsFromSaveData(List<FlagEntry> flagEntries)
     {
-        flags.Clear();
+        flags.Clear(); // clear existing flags before loading new ones
+
         foreach (FlagEntry entry in flagEntries)
         {
-            flags[entry.flagName] = entry.flagValue;
+            SetFlag(entry.flagName, entry.flagValue);
+        }
+        Debug.Log("[GameFlags] Flags loaded from save data.");
+        foreach (var kvp in flags)
+        {
+            Debug.Log($"[GameFlags] Flag: {kvp.Key}, Value: {kvp.Value}");
         }
     }
 }

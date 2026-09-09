@@ -2752,7 +2752,7 @@ GameObject:
   - component: {fileID: 472111125}
   - component: {fileID: 472111133}
   m_Layer: 0
-  m_Name: Door (1)
+  m_Name: d00001
   m_TagString: isDoor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2786,7 +2786,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9943d880b892f04482c26ad939e989d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorController
-  doorName: 
+  doorName: d00001
   doorLocked: 0
 --- !u!95 &472111127
 Animator:
@@ -6124,7 +6124,7 @@ GameObject:
   - component: {fileID: 1173549726}
   - component: {fileID: 1173549727}
   m_Layer: 0
-  m_Name: LockedDoor
+  m_Name: dl00001
   m_TagString: isDoor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6301,7 +6301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9943d880b892f04482c26ad939e989d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorController
-  doorName: d00001
+  doorName: dl00001
   doorLocked: 1
 --- !u!114 &1173549727
 MonoBehaviour:
@@ -7625,7 +7625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9943d880b892f04482c26ad939e989d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoorController
-  doorName: d00002
+  doorName: dl00002
   doorLocked: 1
 --- !u!95 &1535815642
 Animator:
@@ -10213,7 +10213,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6093206276427568354, guid: 2654ac84f905c4144bde88b0f14907f6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ConfirmRename
+      value: ConfirmNewSave
       objectReference: {fileID: 0}
     - target: {fileID: 6093206276427568354, guid: 2654ac84f905c4144bde88b0f14907f6, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName

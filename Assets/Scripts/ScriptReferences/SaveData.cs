@@ -17,6 +17,8 @@ public class SaveData
     public string sceneName;
     public int sceneBuildIndex;
 
+    public List<FlagEntry> flags;
+
     public List<InventoryEntry> inventory;
 
     public SaveSlot metaData;

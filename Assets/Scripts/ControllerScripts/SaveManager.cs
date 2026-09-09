@@ -195,6 +195,7 @@ public class SaveManager : MonoBehaviour
         data.cameraRotation = playerCamRot;
         data.inventory = inventory;
         data.metaData = metaData;
+        data.flags = GameFlags.instance.GetFlagsSaveData();
 
         metaData.generalArea = sceneName;
         metaData.questName = "Placeholder";
@@ -225,6 +226,8 @@ public class SaveManager : MonoBehaviour
 
         PlayerHealth.instance.SetHealth(data.health);
         PlayerMovement.instance.SetStamina(data.stamina);
+
+        GameFlags.instance.LoadFlagsFromSaveData(data.flags);
 
         foreach (InventoryEntry entry in data.inventory)
         {

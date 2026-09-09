@@ -165,15 +165,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""AddItemTest"",
-                    ""type"": ""Button"",
-                    ""id"": ""89153432-2cc2-40f8-bbd8-7a33f1175cae"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""OpenInventory"",
                     ""type"": ""Button"",
                     ""id"": ""5d2e6959-dc90-4099-bca1-2ff70ccdda1a"",
@@ -195,6 +186,33 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""name"": ""Menu"",
                     ""type"": ""Button"",
                     ""id"": ""eebbb4f8-8be6-46c1-8300-065e65271c84"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AddFlagTest1"",
+                    ""type"": ""Button"",
+                    ""id"": ""14c5d0bf-2a14-4bd6-84c6-cfeac5dfbb05"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AddFlagTest2"",
+                    ""type"": ""Button"",
+                    ""id"": ""991d11d9-cdfc-4b66-bba4-691c8abcf4b3"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""StartTestCoroutine"",
+                    ""type"": ""Button"",
+                    ""id"": ""86edaef4-5015-4ca0-a7e7-caeb0b09eb5b"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -556,28 +574,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""ef01baa1-63da-4d6b-8b9e-adf5cb60859d"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""AddItemTest"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""ad5db320-57e0-4510-8292-dbee68bad0e7"",
-                    ""path"": ""<Keyboard>/t"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse"",
-                    ""action"": ""AddItemTest"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""3a00bd39-012b-448e-80ff-648aeae0016b"",
                     ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
@@ -674,6 +670,39 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Menu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd864f20-17ea-4778-be2e-3205b2575310"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""AddFlagTest1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""402c2d19-a7be-476e-84b5-a71e55cdb054"",
+                    ""path"": ""<Keyboard>/f2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""AddFlagTest2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a1b8c303-c69d-4606-bf72-fd03b78cf5c1"",
+                    ""path"": ""<Keyboard>/f3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""StartTestCoroutine"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -751,10 +780,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_Flashlight = m_Player.FindAction("Flashlight", throwIfNotFound: true);
-        m_Player_AddItemTest = m_Player.FindAction("AddItemTest", throwIfNotFound: true);
         m_Player_OpenInventory = m_Player.FindAction("OpenInventory", throwIfNotFound: true);
         m_Player_SelectItem = m_Player.FindAction("SelectItem", throwIfNotFound: true);
         m_Player_Menu = m_Player.FindAction("Menu", throwIfNotFound: true);
+        m_Player_AddFlagTest1 = m_Player.FindAction("AddFlagTest1", throwIfNotFound: true);
+        m_Player_AddFlagTest2 = m_Player.FindAction("AddFlagTest2", throwIfNotFound: true);
+        m_Player_StartTestCoroutine = m_Player.FindAction("StartTestCoroutine", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -843,10 +874,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_Flashlight;
-    private readonly InputAction m_Player_AddItemTest;
     private readonly InputAction m_Player_OpenInventory;
     private readonly InputAction m_Player_SelectItem;
     private readonly InputAction m_Player_Menu;
+    private readonly InputAction m_Player_AddFlagTest1;
+    private readonly InputAction m_Player_AddFlagTest2;
+    private readonly InputAction m_Player_StartTestCoroutine;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -891,10 +924,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Flashlight => m_Wrapper.m_Player_Flashlight;
         /// <summary>
-        /// Provides access to the underlying input action "Player/AddItemTest".
-        /// </summary>
-        public InputAction @AddItemTest => m_Wrapper.m_Player_AddItemTest;
-        /// <summary>
         /// Provides access to the underlying input action "Player/OpenInventory".
         /// </summary>
         public InputAction @OpenInventory => m_Wrapper.m_Player_OpenInventory;
@@ -906,6 +935,18 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Player/Menu".
         /// </summary>
         public InputAction @Menu => m_Wrapper.m_Player_Menu;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/AddFlagTest1".
+        /// </summary>
+        public InputAction @AddFlagTest1 => m_Wrapper.m_Player_AddFlagTest1;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/AddFlagTest2".
+        /// </summary>
+        public InputAction @AddFlagTest2 => m_Wrapper.m_Player_AddFlagTest2;
+        /// <summary>
+        /// Provides access to the underlying input action "Player/StartTestCoroutine".
+        /// </summary>
+        public InputAction @StartTestCoroutine => m_Wrapper.m_Player_StartTestCoroutine;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -956,9 +997,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Flashlight.started += instance.OnFlashlight;
             @Flashlight.performed += instance.OnFlashlight;
             @Flashlight.canceled += instance.OnFlashlight;
-            @AddItemTest.started += instance.OnAddItemTest;
-            @AddItemTest.performed += instance.OnAddItemTest;
-            @AddItemTest.canceled += instance.OnAddItemTest;
             @OpenInventory.started += instance.OnOpenInventory;
             @OpenInventory.performed += instance.OnOpenInventory;
             @OpenInventory.canceled += instance.OnOpenInventory;
@@ -968,6 +1006,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Menu.started += instance.OnMenu;
             @Menu.performed += instance.OnMenu;
             @Menu.canceled += instance.OnMenu;
+            @AddFlagTest1.started += instance.OnAddFlagTest1;
+            @AddFlagTest1.performed += instance.OnAddFlagTest1;
+            @AddFlagTest1.canceled += instance.OnAddFlagTest1;
+            @AddFlagTest2.started += instance.OnAddFlagTest2;
+            @AddFlagTest2.performed += instance.OnAddFlagTest2;
+            @AddFlagTest2.canceled += instance.OnAddFlagTest2;
+            @StartTestCoroutine.started += instance.OnStartTestCoroutine;
+            @StartTestCoroutine.performed += instance.OnStartTestCoroutine;
+            @StartTestCoroutine.canceled += instance.OnStartTestCoroutine;
         }
 
         /// <summary>
@@ -1003,9 +1050,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Flashlight.started -= instance.OnFlashlight;
             @Flashlight.performed -= instance.OnFlashlight;
             @Flashlight.canceled -= instance.OnFlashlight;
-            @AddItemTest.started -= instance.OnAddItemTest;
-            @AddItemTest.performed -= instance.OnAddItemTest;
-            @AddItemTest.canceled -= instance.OnAddItemTest;
             @OpenInventory.started -= instance.OnOpenInventory;
             @OpenInventory.performed -= instance.OnOpenInventory;
             @OpenInventory.canceled -= instance.OnOpenInventory;
@@ -1015,6 +1059,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @Menu.started -= instance.OnMenu;
             @Menu.performed -= instance.OnMenu;
             @Menu.canceled -= instance.OnMenu;
+            @AddFlagTest1.started -= instance.OnAddFlagTest1;
+            @AddFlagTest1.performed -= instance.OnAddFlagTest1;
+            @AddFlagTest1.canceled -= instance.OnAddFlagTest1;
+            @AddFlagTest2.started -= instance.OnAddFlagTest2;
+            @AddFlagTest2.performed -= instance.OnAddFlagTest2;
+            @AddFlagTest2.canceled -= instance.OnAddFlagTest2;
+            @StartTestCoroutine.started -= instance.OnStartTestCoroutine;
+            @StartTestCoroutine.performed -= instance.OnStartTestCoroutine;
+            @StartTestCoroutine.canceled -= instance.OnStartTestCoroutine;
         }
 
         /// <summary>
@@ -1177,13 +1230,6 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFlashlight(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "AddItemTest" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnAddItemTest(InputAction.CallbackContext context);
-        /// <summary>
         /// Method invoked when associated input action "OpenInventory" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
@@ -1204,5 +1250,26 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnMenu(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "AddFlagTest1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAddFlagTest1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "AddFlagTest2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnAddFlagTest2(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "StartTestCoroutine" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnStartTestCoroutine(InputAction.CallbackContext context);
     }
 }

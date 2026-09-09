@@ -15,11 +15,20 @@ public class ItemPickup : MonoBehaviour, Iinteractable
 
     public void Start()
     {
+        if(GameFlags.instance.GetFlag(item.itemName + "_pickedup"))
+        {
+            pickedUp = true;
+            thisObject.enabled = false;
+            thisObjectCollider.enabled = false;
+            Debug.Log("Item already picked up: " + item.itemName);
+        }
+
         inventoryController = CoreInventoryController.instance;
         outline = GetComponent<Outline>();
         outline.enabled = false;
         thisObject = GetComponent<MeshRenderer>();
         thisObjectCollider = GetComponent<Collider>();
+        Debug.Log("Instantiated item: " + item.itemName);
     }
 
     public void Interact()
@@ -27,6 +36,7 @@ public class ItemPickup : MonoBehaviour, Iinteractable
         if (!pickedUp)
         {
             inventoryController.AddItem(item, 1);
+            GameFlags.instance.SetFlag(item.itemName + "_pickedup", true);
             pickedUp = true;
             thisObject.enabled = false;
             thisObjectCollider.enabled = false;

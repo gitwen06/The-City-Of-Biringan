@@ -8,10 +8,11 @@ public class KeyItem : ItemScriptableObject
     public override void Use()
     {
         DoorController door = DoorRegistry.instance.GetDoor(doorToOpen);
+        string doorName = door.name;
 
         if (door != null)
         {
-            door.unlockDoor();
+            door.unlockDoor(doorName);
         }
     }
 }

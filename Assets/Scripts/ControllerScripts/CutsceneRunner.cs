@@ -40,6 +40,12 @@ public class CutsceneRunner : MonoBehaviour
     public void Play(CutsceneConfig config)
     {
         if (isPlaying) { return; }
+        if (GameFlags.instance.GetFlag(config.cutsceneName))
+        {
+            Debug.Log("already played");
+            return;
+        }
+        GameFlags.instance.SetFlag(config.cutsceneName, true);
         Debug.Log("CutsceneRunner: Playing '" + config.cutsceneName + "'");
 
         HUDController.instance.hideUINote();

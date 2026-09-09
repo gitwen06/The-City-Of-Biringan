@@ -132,6 +132,7 @@ public class DialogueController : MonoBehaviour
 
         dialogueBox.SetActive(false);
 
+        HUDController.instance.enableInventory();
         HUDController.instance.ShowInteractionText();
         HUDController.instance.showUiNote();
         Cursor.lockState = CursorLockMode.Locked;

@@ -11,6 +11,19 @@ public class DoorController : MonoBehaviour, Iinteractable
     public bool doorLocked = false;
     void Start()
     {
+        if(GameFlags.instance.GetFlag(doorName + "_unlocked"))
+        {
+            doorLocked = false;
+            isDoorOpen = !isDoorOpen;
+            animator.SetBool("isOpen", isDoorOpen);
+            Debug.Log($"Door {doorName} is unlocked and gameflag is {GameFlags.instance.GetFlag(doorName + "_unlocked")}");
+        }
+        else
+        {
+            doorLocked = true;
+            Debug.Log($"Door {doorName} is locked and gameflag is {GameFlags.instance.GetFlag(doorName + "_unlocked")}");
+        }
+
         animator = GetComponent<Animator>();
         outline = GetComponent<Outline>();
         if (outline != null) outline.enabled = false;
@@ -38,9 +51,11 @@ public class DoorController : MonoBehaviour, Iinteractable
         }
     }
 
-    public void unlockDoor()
+    public void unlockDoor(string doorName)
     {
         doorLocked = false;
+        GameFlags.instance.SetFlag(doorName + "_unlocked", true);
+        Debug.Log($"Unlocked door {doorName} and gameflag is {GameFlags.instance.GetFlag(doorName + "_unlocked")}");
     }
 
     public void EnableOutline()

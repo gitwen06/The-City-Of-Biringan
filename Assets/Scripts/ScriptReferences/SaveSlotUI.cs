@@ -65,12 +65,10 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
     {
         Vector3 startScale = rectTransform.localScale;
         Vector3 targetScale = isHovering ? originalScale * hoverScale : originalScale;
-        Debug.Log($"StartScale: {startScale}, TargetScale: {targetScale}");
 
         float elapsed = 0f;
         while (elapsed < animDuration)
         {
-            Debug.Log($"Elapsed: {elapsed}, animDuration: {animDuration}"); //gahdaym for 3 hours this was the problem????
             float t = elapsed / animDuration;
             float easedT = 1f - Mathf.Pow(1f - t, 3f);
             rectTransform.localScale = Vector3.Lerp(startScale, targetScale, easedT);
@@ -78,7 +76,6 @@ public class SaveSlotUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandl
             yield return null;
         }
         rectTransform.localScale = targetScale;
-        Debug.Log($"LocalScale: {rectTransform.localScale}. targetscale: {targetScale}");
     }
 
     public void UpdateIndex(int newIndex)

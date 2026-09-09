@@ -17,5 +17,6 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: 763e4d07dbb26f040a9a9662096c3860, type: 3}
   description: Used for opening locked doors
   maxStackSize: 1
+  useableInOpenSpace: 0
   handModel: {fileID: 6693805190666396728, guid: d45252e0e11d15d4e824eef8b4512c2c, type: 3}
-  doorToOpen: d00001
+  doorToOpen: dl00001
