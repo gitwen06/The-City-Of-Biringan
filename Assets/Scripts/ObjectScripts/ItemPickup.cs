@@ -11,11 +11,17 @@ public class ItemPickup : MonoBehaviour, Iinteractable
     private MeshRenderer thisObject;
     private Collider thisObjectCollider;
 
-    Outline outline; 
+    Outline outline;
 
     public void Start()
     {
-        if(GameFlags.instance.GetFlag(item.itemName + "_pickedup"))
+        inventoryController = CoreInventoryController.instance;
+        outline = GetComponent<Outline>();
+        outline.enabled = false;
+        thisObject = GetComponent<MeshRenderer>();
+        thisObjectCollider = GetComponent<Collider>();
+
+        if (GameFlags.instance.GetFlag(item.itemName + "_pickedup"))
         {
             pickedUp = true;
             thisObject.enabled = false;
@@ -23,11 +29,6 @@ public class ItemPickup : MonoBehaviour, Iinteractable
             Debug.Log("Item already picked up: " + item.itemName);
         }
 
-        inventoryController = CoreInventoryController.instance;
-        outline = GetComponent<Outline>();
-        outline.enabled = false;
-        thisObject = GetComponent<MeshRenderer>();
-        thisObjectCollider = GetComponent<Collider>();
         Debug.Log("Instantiated item: " + item.itemName);
     }
 

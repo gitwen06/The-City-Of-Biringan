@@ -8,11 +8,6 @@ using TMPro;
 using System.Linq;
 using Unity.VisualScripting;
 
-/*TODO IN COREINVENTORYCONTROLLER:
- *Set up a gameflag for each gameobject item in scene so that when the player picks it up it is removed from the scene and when the player loads a save
- *it checks if the gameflag is set and if so it does not spawn the item in the scene. -- WORK IN PROGRESS
- */
-
 public class CoreInventoryController : MonoBehaviour
 {
     [SerializeField] private GameObject Toolbar;

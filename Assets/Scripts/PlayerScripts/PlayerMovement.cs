@@ -42,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     private CapsuleCollider capsule;
     private bool isRunning = false;
 
+    bool flashlightState;
 
     private InputSystem_Actions inputActions;
     private Rigidbody rb;
@@ -114,7 +115,17 @@ public class PlayerMovement : MonoBehaviour
         {
             playerStamina.value = currentStamina;
         }
+
+        if (GameFlags.instance.GetFlag("flashlightOn"))
+        {
+            playerFlashlight.gameObject.SetActive(true);
+        }
+        else
+        {
+            playerFlashlight.gameObject.SetActive(false);
+        }
     }
+
     private void Update()
     {
         if (isFrozen)
@@ -219,7 +230,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnFlashlightPerformed(InputAction.CallbackContext context)
     {
+        bool flashlightState = playerFlashlight.gameObject.activeSelf;
         playerFlashlight.gameObject.SetActive(!playerFlashlight.gameObject.activeSelf);
+        GameFlags.instance.SetFlag("flashlightOn", !flashlightState);
     }
 
     private void OnCrouchPerformed(InputAction.CallbackContext context)

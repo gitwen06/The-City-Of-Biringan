@@ -208,6 +208,8 @@ public class SaveManager : MonoBehaviour
         SaveData data = LoadFromSlot(slotindex);
         if (data == null) { yield break; }
 
+        GameFlags.instance.LoadFlagsFromSaveData(data.flags);
+
         AsyncOperation operation = SceneManager.LoadSceneAsync(data.sceneName);
         while (!operation.isDone)
         {
@@ -226,8 +228,6 @@ public class SaveManager : MonoBehaviour
 
         PlayerHealth.instance.SetHealth(data.health);
         PlayerMovement.instance.SetStamina(data.stamina);
-
-        GameFlags.instance.LoadFlagsFromSaveData(data.flags);
 
         foreach (InventoryEntry entry in data.inventory)
         {

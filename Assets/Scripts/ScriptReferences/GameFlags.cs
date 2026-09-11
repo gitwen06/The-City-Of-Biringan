@@ -4,6 +4,7 @@ using System.Collections;
 
 public class GameFlags : MonoBehaviour
 {
+    private static readonly HashSet<string> sessionOnlyFlags = new HashSet<string> { "isGamePaused" };
     private Dictionary<string, bool> flags = new Dictionary<string, bool>();
 
     public static GameFlags instance;
@@ -18,6 +19,7 @@ public class GameFlags : MonoBehaviour
             return;
         }
         instance = this;
+        DontDestroyOnLoad(gameObject);
         inputActions = new InputSystem_Actions();
     }
 
@@ -80,6 +82,8 @@ public class GameFlags : MonoBehaviour
 
         foreach (var kvp in flags)
         {
+            if (sessionOnlyFlags.Contains(kvp.Key)) { continue; }
+
             FlagEntry entry = new FlagEntry();
             entry.flagName = kvp.Key;
             entry.flagValue = kvp.Value;

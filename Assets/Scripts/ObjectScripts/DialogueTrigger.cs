@@ -1,10 +1,5 @@
 using UnityEngine;
 
-/* TODO IN DIALOGUETRIGGER:
- * Set up the dialogue trigger to check for the game flag "HasCube" and if it is true, then it will trigger the hasSomethingDialogue instead of the normalDialogue.
- * Set up gameflags that passes into savemanager to know if the player has talked to the NPC before, and if they have, then it will trigger the talkedDialogue instead of the normalDialogue. 
- */
-
 public class DialogueTrigger : MonoBehaviour, Iinteractable
 {
     [SerializeField] DialogueData normalDialogue;

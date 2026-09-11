@@ -11,23 +11,18 @@ public class DoorController : MonoBehaviour, Iinteractable
     public bool doorLocked = false;
     void Start()
     {
-        if(GameFlags.instance.GetFlag(doorName + "_unlocked"))
-        {
-            doorLocked = false;
-            isDoorOpen = !isDoorOpen;
-            animator.SetBool("isOpen", isDoorOpen);
-            Debug.Log($"Door {doorName} is unlocked and gameflag is {GameFlags.instance.GetFlag(doorName + "_unlocked")}");
-        }
-        else
-        {
-            doorLocked = true;
-            Debug.Log($"Door {doorName} is locked and gameflag is {GameFlags.instance.GetFlag(doorName + "_unlocked")}");
-        }
-
         animator = GetComponent<Animator>();
         outline = GetComponent<Outline>();
         if (outline != null) outline.enabled = false;
         DoorRegistry.instance.RegisterDoor(doorName, this);
+
+        if (GameFlags.instance.GetFlag(doorName + "_unlocked"))
+        {
+            doorLocked = false;
+        }
+
+        isDoorOpen = GameFlags.instance.GetFlag(doorName + "_open");
+        animator.SetBool("isOpen", isDoorOpen);
     }
 
     public void Interact()
@@ -44,6 +39,7 @@ public class DoorController : MonoBehaviour, Iinteractable
         {
             isDoorOpen = !isDoorOpen;
             animator.SetBool("isOpen", isDoorOpen);
+            GameFlags.instance.SetFlag(doorName + "_open", isDoorOpen);
         }
         else
         {
