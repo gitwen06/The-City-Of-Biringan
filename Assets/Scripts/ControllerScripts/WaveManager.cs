@@ -5,6 +5,7 @@ public class WaveManager : MonoBehaviour
 {
     public static WaveManager instance;
     [SerializeField] private List<GerstnerWave> waves;
+    [SerializeField] private float waterLevel = 22.49f;
 
     private void Awake()
     {
@@ -45,7 +46,7 @@ public class WaveManager : MonoBehaviour
 
     public float GetHeightAtPosition(Vector3 worldPos, float time)
     {
-        float height = 0f;
+        float height = waterLevel;  
 
         foreach (GerstnerWave wave in waves)
         {
