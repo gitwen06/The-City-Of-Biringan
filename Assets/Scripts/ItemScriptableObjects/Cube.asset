@@ -19,3 +19,4 @@ MonoBehaviour:
   maxStackSize: 30
   useableInOpenSpace: 1
   handModel: {fileID: 6450469778495508663, guid: d191f5592209cfe4f9fd775547f74263, type: 3}
+  worldModel: {fileID: 4522725543539311266, guid: 4d49195969cb43843be7e5cf5dab03f4, type: 3}

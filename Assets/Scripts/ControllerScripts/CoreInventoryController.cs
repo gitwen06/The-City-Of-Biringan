@@ -354,4 +354,23 @@ public class CoreInventoryController : MonoBehaviour
             return null;
         }
     }
+
+    public ItemScriptableObject GetSelectedItem()
+    {
+        if (selectedSlot < 0 || selectedSlot >= itemList.Count) { return null; }
+        return GetItemAtSlot(selectedSlot);
+    }
+
+    public void RemoveOneFromSelectedSlot()
+    {
+        if (selectedSlot < 0 || selectedSlot >= itemList.Count || itemList[selectedSlot] == null) { return; }
+
+        itemList[selectedSlot].quantity--;
+        if (itemList[selectedSlot].quantity <= 0)
+        {
+            itemList[selectedSlot] = null;
+        }
+
+        UpdateInventoryUI(); 
+    }
 }

@@ -217,6 +217,15 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Throw"",
+                    ""type"": ""Button"",
+                    ""id"": ""7390366c-8fba-4a24-9513-1b88c6472af9"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -703,6 +712,17 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
                     ""action"": ""StartTestCoroutine"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d6eacbe5-4bce-452f-a760-40dbcbc0373c"",
+                    ""path"": ""<Keyboard>/g"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Throw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -786,6 +806,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         m_Player_AddFlagTest1 = m_Player.FindAction("AddFlagTest1", throwIfNotFound: true);
         m_Player_AddFlagTest2 = m_Player.FindAction("AddFlagTest2", throwIfNotFound: true);
         m_Player_StartTestCoroutine = m_Player.FindAction("StartTestCoroutine", throwIfNotFound: true);
+        m_Player_Throw = m_Player.FindAction("Throw", throwIfNotFound: true);
     }
 
     ~@InputSystem_Actions()
@@ -880,6 +901,7 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_AddFlagTest1;
     private readonly InputAction m_Player_AddFlagTest2;
     private readonly InputAction m_Player_StartTestCoroutine;
+    private readonly InputAction m_Player_Throw;
     /// <summary>
     /// Provides access to input actions defined in input action map "Player".
     /// </summary>
@@ -948,6 +970,10 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @StartTestCoroutine => m_Wrapper.m_Player_StartTestCoroutine;
         /// <summary>
+        /// Provides access to the underlying input action "Player/Throw".
+        /// </summary>
+        public InputAction @Throw => m_Wrapper.m_Player_Throw;
+        /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -1015,6 +1041,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @StartTestCoroutine.started += instance.OnStartTestCoroutine;
             @StartTestCoroutine.performed += instance.OnStartTestCoroutine;
             @StartTestCoroutine.canceled += instance.OnStartTestCoroutine;
+            @Throw.started += instance.OnThrow;
+            @Throw.performed += instance.OnThrow;
+            @Throw.canceled += instance.OnThrow;
         }
 
         /// <summary>
@@ -1068,6 +1097,9 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
             @StartTestCoroutine.started -= instance.OnStartTestCoroutine;
             @StartTestCoroutine.performed -= instance.OnStartTestCoroutine;
             @StartTestCoroutine.canceled -= instance.OnStartTestCoroutine;
+            @Throw.started -= instance.OnThrow;
+            @Throw.performed -= instance.OnThrow;
+            @Throw.canceled -= instance.OnThrow;
         }
 
         /// <summary>
@@ -1271,5 +1303,12 @@ public partial class @InputSystem_Actions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnStartTestCoroutine(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Throw" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnThrow(InputAction.CallbackContext context);
     }
 }

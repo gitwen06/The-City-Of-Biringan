@@ -12,6 +12,7 @@ public class ItemScriptableObject : ScriptableObject
     public bool useableInOpenSpace;
 
     public GameObject handModel;
+    public GameObject worldModel;
 
     public virtual void Use()
     {

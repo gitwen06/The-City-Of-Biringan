@@ -19,4 +19,5 @@ MonoBehaviour:
   maxStackSize: 1
   useableInOpenSpace: 0
   handModel: {fileID: 6693805190666396728, guid: d45252e0e11d15d4e824eef8b4512c2c, type: 3}
+  worldModel: {fileID: 5217219002355933973, guid: 0f94361b41c62394299aa7cb2d2c8dd9, type: 3}
   doorToOpen: dl00001

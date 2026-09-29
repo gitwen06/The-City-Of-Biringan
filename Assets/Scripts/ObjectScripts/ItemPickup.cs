@@ -11,6 +11,8 @@ public class ItemPickup : MonoBehaviour, Iinteractable
     private MeshRenderer thisObject;
     private Collider thisObjectCollider;
 
+    public bool isDynamicInstance = false;
+
     Outline outline;
 
     public void Start()
@@ -21,7 +23,7 @@ public class ItemPickup : MonoBehaviour, Iinteractable
         thisObject = GetComponent<MeshRenderer>();
         thisObjectCollider = GetComponent<Collider>();
 
-        if (GameFlags.instance.GetFlag(item.itemName + "_pickedup"))
+        if (!isDynamicInstance && GameFlags.instance.GetFlag(item.itemName + "_pickedup"))
         {
             pickedUp = true;
             thisObject.enabled = false;
