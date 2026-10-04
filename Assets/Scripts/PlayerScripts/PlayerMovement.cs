@@ -42,6 +42,10 @@ public class PlayerMovement : MonoBehaviour
     private CapsuleCollider capsule;
     private bool isRunning = false;
 
+    [Header("Swimming")]
+    [SerializeField] private float swimSpeed = 3.5f;
+    [SerializeField] private float swimRotationSpeed = 5f;
+
     bool flashlightState;
 
     private InputSystem_Actions inputActions;
@@ -53,11 +57,15 @@ public class PlayerMovement : MonoBehaviour
 
     public static PlayerMovement instance;
 
+    private Floater floater;
+    private bool isSwimming = false;
+
     private void Awake()
     {
         inputActions = new InputSystem_Actions();
         rb = GetComponent<Rigidbody>();
         capsule = GetComponent<CapsuleCollider>();
+        floater = GetComponent<Floater>();
         if (instance != null && instance != this)
         {
             Destroy(gameObject);
@@ -148,70 +156,93 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        isSwimming = floater.GetSubmersionFactor() >= 0.5f;
+
         if (isFrozen)
         {
             // while frozen, ignore physics and stamina/FOV updates
             return;
         }
-        // determine desired sprint input
-        bool wantsToSprint = inputActions.Player.Sprint.IsPressed();
 
-        // disable sprinting while exhausted
-        isRunning = wantsToSprint && !isExhausted && moveInput != Vector2.zero;
-
-        float currentSpeed = isRunning ? moveSpeed * 2.0f : moveSpeed;
-
-        // handle stamina drain when actually sprinting (and moving)
-        if (isRunning)
+        if (isSwimming)
         {
-            // reset regen delay while sprinting
-            regenDelayTimer = staminaRegenDelay;
+            // while swimming, ignore stamina and sprinting entirely
+            isRunning = false;
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 60f, cameraFOVChangeRate * Time.fixedDeltaTime);
 
-            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 75f, cameraFOVChangeRate * Time.fixedDeltaTime);
-            currentStamina -= staminaDrainRate * Time.fixedDeltaTime;
-            if (currentStamina <= 0f)
-            {
-                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 60f, cameraFOVChangeRate * Time.fixedDeltaTime);
-                currentStamina = 0f;
-                isExhausted = true;
-                // give a slightly longer delay after exhaustion
-                regenDelayTimer = staminaRegenDelay + 0.5f;
-            }
+            // move using full look direction (pitch included) for forward/back,
+            // flat body-right for strafing — same split as land movement, just
+            // swapping which transform's forward drives forward/back
+            move = (transform.right * moveInput.x + cameraTransform.forward * moveInput.y) * swimSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(rb.position + move);
+
+            // rotate the body to match look pitch + current yaw
+            Quaternion lookRotation = Quaternion.Euler(pitch, transform.eulerAngles.y, 0f);
+            lookRotation = Quaternion.Slerp(transform.rotation, lookRotation, swimRotationSpeed * Time.fixedDeltaTime);
+            rb.rotation = lookRotation;
         }
         else
         {
-            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 60f, cameraFOVChangeRate * Time.fixedDeltaTime);
-            // not sprinting: count down delay then regenerate
-            if (regenDelayTimer > 0f)
+            // determine desired sprint input
+            bool wantsToSprint = inputActions.Player.Sprint.IsPressed();
+
+            // disable sprinting while exhausted
+            isRunning = wantsToSprint && !isExhausted && moveInput != Vector2.zero;
+
+            float currentSpeed = isRunning ? moveSpeed * 2.0f : moveSpeed;
+
+            // handle stamina drain when actually sprinting (and moving)
+            if (isRunning)
             {
-                regenDelayTimer -= Time.fixedDeltaTime;
+                // reset regen delay while sprinting
+                regenDelayTimer = staminaRegenDelay;
+
+                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 75f, cameraFOVChangeRate * Time.fixedDeltaTime);
+                currentStamina -= staminaDrainRate * Time.fixedDeltaTime;
+                if (currentStamina <= 0f)
+                {
+                    playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 60f, cameraFOVChangeRate * Time.fixedDeltaTime);
+                    currentStamina = 0f;
+                    isExhausted = true;
+                    // give a slightly longer delay after exhaustion
+                    regenDelayTimer = staminaRegenDelay + 0.5f;
+                }
             }
             else
             {
-                currentStamina += staminaRegenRate * Time.fixedDeltaTime;
-                if (currentStamina >= maxStamina)
+                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 60f, cameraFOVChangeRate * Time.fixedDeltaTime);
+                // not sprinting: count down delay then regenerate
+                if (regenDelayTimer > 0f)
                 {
-                    currentStamina = maxStamina;
+                    regenDelayTimer -= Time.fixedDeltaTime;
                 }
-
-                // recover from exhaustion when we have enough stamina
-                if (isExhausted && currentStamina >= exhaustionRecoveryThreshold)
+                else
                 {
-                    isExhausted = false;
+                    currentStamina += staminaRegenRate * Time.fixedDeltaTime;
+                    if (currentStamina >= maxStamina)
+                    {
+                        currentStamina = maxStamina;
+                    }
+
+                    // recover from exhaustion when we have enough stamina
+                    if (isExhausted && currentStamina >= exhaustionRecoveryThreshold)
+                    {
+                        isExhausted = false;
+                    }
                 }
             }
-        }
 
-        // clamp and apply to UI
-        currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
-        if (playerStamina != null)
-        {
-            playerStamina.value = currentStamina;
-        }
+            // clamp and apply to UI
+            currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+            if (playerStamina != null)
+            {
+                playerStamina.value = currentStamina;
+            }
 
-        // move the player
-        move = (transform.right * moveInput.x + transform.forward * moveInput.y) * currentSpeed * Time.fixedDeltaTime;
-        rb.MovePosition(rb.position + move);
+            // move the player
+            move = (transform.right * moveInput.x + transform.forward * moveInput.y) * currentSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(rb.position + move);
+        }
     }
 
     private bool IsGrounded()

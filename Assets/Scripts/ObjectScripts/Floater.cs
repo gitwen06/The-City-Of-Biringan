@@ -162,4 +162,34 @@ public class Floater : MonoBehaviour
         rb.linearDamping = isSubmerged ? WaterDrag : AirDrag;
         rb.angularDamping = isSubmerged ? WaterAngularDrag : AirAngularDrag;
     }
+
+    //=============================    Swimming System Functions   ===============================
+
+    public float GetSubmersionFactor()
+    { 
+        if (!inWaterVolume)
+        {
+            return 0f;
+        }
+
+        else
+        {
+            Bounds myBounds = GetComponent<Collider>().bounds;
+            float bottom = myBounds.min.y;
+            float top = myBounds.max.y;
+            float waveHeight = WaveManager.instance.GetHeightAtPosition(myBounds.center, Time.time);
+            if(waveHeight <= bottom)
+            {
+                return 0f;
+            }
+            else if (waveHeight >= top)
+            {
+                return 1f;
+            }
+            else
+            {
+                return (waveHeight - bottom) / (top - bottom);
+            }
+        }
+    }
 }

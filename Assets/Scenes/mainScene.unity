@@ -17767,7 +17767,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Floater
   floatPoints:
   - {fileID: 1841322266}
-  buoyancyMultiplier: 0.1
+  buoyancyMultiplier: 0.03
 --- !u!114 &1574509697401147549
 MonoBehaviour:
   m_ObjectHideFlags: 0
