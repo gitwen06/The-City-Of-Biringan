@@ -45,6 +45,12 @@ public class PlayerMovement : MonoBehaviour
     [Header("Swimming")]
     [SerializeField] private float swimSpeed = 3.5f;
     [SerializeField] private float swimRotationSpeed = 5f;
+    [SerializeField] private Transform bodyTransform;
+    [SerializeField] private float swimExitRotationSpeed = 10f; 
+    [SerializeField] private float fastSwimMultiplier = 2f;
+    [SerializeField] private float fastSwimStaminaDrainRate = 15.5f;
+
+    private bool isFastSwimming = false;
 
     bool flashlightState;
 
@@ -64,7 +70,8 @@ public class PlayerMovement : MonoBehaviour
     {
         inputActions = new InputSystem_Actions();
         rb = GetComponent<Rigidbody>();
-        capsule = GetComponent<CapsuleCollider>();
+        // the capsule collider now lives on the Body child; falls back to the root if Body isn't assigned yet
+        capsule = bodyTransform != null ? bodyTransform.GetComponent<CapsuleCollider>() : GetComponent<CapsuleCollider>();
         floater = GetComponent<Floater>();
         if (instance != null && instance != this)
         {
@@ -154,6 +161,8 @@ public class PlayerMovement : MonoBehaviour
         playerFlashlight.localRotation = Quaternion.Euler(pitch, 0f, 0f);
     }
 
+
+
     private void FixedUpdate()
     {
         isSwimming = floater.GetSubmersionFactor() >= 0.5f;
@@ -166,6 +175,53 @@ public class PlayerMovement : MonoBehaviour
 
         if (isSwimming)
         {
+            bool wantsToFastSwim = inputActions.Player.Sprint.IsPressed();
+
+            isFastSwimming = wantsToFastSwim && !isExhausted && moveInput != Vector2.zero;
+
+            float currentSwimSpeed = isFastSwimming ? swimSpeed * fastSwimMultiplier : swimSpeed;
+
+            if (isFastSwimming)
+            {
+                regenDelayTimer = staminaRegenDelay;
+
+                currentStamina -= fastSwimStaminaDrainRate * Time.fixedDeltaTime;
+
+                if (currentStamina <= 0f)
+                {
+                    currentStamina = 0f;
+                    isExhausted = true;
+                    isFastSwimming = false;
+                    regenDelayTimer = staminaRegenDelay + 0.5f;
+                    currentSwimSpeed = swimSpeed;
+                }
+            }
+            else
+            {
+                if (regenDelayTimer > 0f)
+                {
+                    regenDelayTimer -= Time.fixedDeltaTime;
+                }
+                else
+                {
+                    currentStamina += staminaRegenRate * Time.fixedDeltaTime;
+                    currentStamina = Mathf.Min(currentStamina, maxStamina);
+
+                    if (isExhausted && currentStamina >= exhaustionRecoveryThreshold)
+                    {
+                        isExhausted = false;
+                    }
+                }
+            }
+
+            currentStamina = Mathf.Clamp(currentStamina, 0f, maxStamina);
+            if (playerStamina != null)
+            {
+                playerStamina.value = currentStamina;
+            }
+
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, isFastSwimming ? 75f : 60f, cameraFOVChangeRate * Time.fixedDeltaTime);
+
             // while swimming, ignore stamina and sprinting entirely
             isRunning = false;
             playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, 60f, cameraFOVChangeRate * Time.fixedDeltaTime);
@@ -173,16 +229,25 @@ public class PlayerMovement : MonoBehaviour
             // move using full look direction (pitch included) for forward/back,
             // flat body-right for strafing — same split as land movement, just
             // swapping which transform's forward drives forward/back
-            move = (transform.right * moveInput.x + cameraTransform.forward * moveInput.y) * swimSpeed * Time.fixedDeltaTime;
+            Vector3 swimDirection = transform.right * moveInput.x + cameraTransform.forward * moveInput.y;
+            move = swimDirection * currentSwimSpeed * Time.fixedDeltaTime;
             rb.MovePosition(rb.position + move);
 
-            // rotate the body to match look pitch + current yaw
-            Quaternion lookRotation = Quaternion.Euler(pitch, transform.eulerAngles.y, 0f);
-            lookRotation = Quaternion.Slerp(transform.rotation, lookRotation, swimRotationSpeed * Time.fixedDeltaTime);
-            rb.rotation = lookRotation;
+            // tilt ONLY the capsule (Body child) so its long axis points along the swim direction —
+            // the root (camera, flashlight, hand, float points) never pitches, it only yaws from Update()
+            Quaternion targetLocal = Quaternion.identity;
+            if (swimDirection.sqrMagnitude > 0.01f) // no input = no real direction, so stay upright
+            {
+                Quaternion targetWorld = Quaternion.FromToRotation(Vector3.up, swimDirection.normalized);
+                targetLocal = Quaternion.Inverse(transform.rotation) * targetWorld;
+            }
+            RotateBody(targetLocal, swimRotationSpeed);
         }
         else
         {
+            // out of the water — return the capsule to its original upright rotation
+            RotateBody(Quaternion.identity, swimExitRotationSpeed);
+
             // determine desired sprint input
             bool wantsToSprint = inputActions.Player.Sprint.IsPressed();
 
@@ -243,6 +308,15 @@ public class PlayerMovement : MonoBehaviour
             move = (transform.right * moveInput.x + transform.forward * moveInput.y) * currentSpeed * Time.fixedDeltaTime;
             rb.MovePosition(rb.position + move);
         }
+    }
+
+
+
+    // smoothly rotates only the Body child (capsule + hitbox), never the root or the camera
+    private void RotateBody(Quaternion targetLocalRotation, float speed)
+    {
+        if (bodyTransform == null) { return; }
+        bodyTransform.localRotation = Quaternion.Slerp(bodyTransform.localRotation, targetLocalRotation, speed * Time.fixedDeltaTime);
     }
 
     private bool IsGrounded()

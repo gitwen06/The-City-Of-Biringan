@@ -19,7 +19,7 @@ public class Trigger : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Trigger entered by: " + other.name);
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Body"))
         {
             onTriggerEnter.Invoke();
             if (cutscene != null && cutscene.director != null && !isPlayed)
@@ -37,7 +37,7 @@ public class Trigger : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         Debug.Log("Trigger exited by: " + other.name);
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Body"))
         {
             onTriggerExit.Invoke();
         }

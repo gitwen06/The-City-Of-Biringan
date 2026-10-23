@@ -22,9 +22,20 @@ public class Floater : MonoBehaviour
     private float submersionThreshold;
     private float autoDamping;
 
+    [SerializeField] private Collider bodyColliderOverride; // assign Body's CapsuleCollider on the Player only
+    private Collider bodyCollider;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        bodyCollider = bodyColliderOverride != null ? bodyColliderOverride : GetComponent<Collider>();
+
+        if (bodyCollider == null)
+        {
+            Debug.LogError($"{name}: Floater has no collider to measure. Assign Body Collider Override.");
+            return;
+        }
+
         CalculateBuoyancyValues();
     }
 
@@ -50,7 +61,7 @@ public class Floater : MonoBehaviour
 
     private float CalculateVolume()
     {
-        Collider col = GetComponent<Collider>();
+        Collider col = bodyCollider;
         Vector3 scale = transform.lossyScale;
 
         if (col is SphereCollider sphere)
@@ -110,7 +121,10 @@ public class Floater : MonoBehaviour
 
     private float CalculateHeight()
     {
-        return GetComponent<Collider>().bounds.size.y;
+        if (bodyCollider == null)
+            return 0f;
+
+        return bodyCollider.bounds.size.y;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -166,19 +180,18 @@ public class Floater : MonoBehaviour
     //=============================    Swimming System Functions   ===============================
 
     public float GetSubmersionFactor()
-    { 
-        if (!inWaterVolume)
+    {
+        if (!inWaterVolume || bodyCollider == null)
         {
             return 0f;
         }
-
         else
         {
-            Bounds myBounds = GetComponent<Collider>().bounds;
+            Bounds myBounds = bodyCollider.bounds;
             float bottom = myBounds.min.y;
             float top = myBounds.max.y;
             float waveHeight = WaveManager.instance.GetHeightAtPosition(myBounds.center, Time.time);
-            if(waveHeight <= bottom)
+            if (waveHeight <= bottom)
             {
                 return 0f;
             }
