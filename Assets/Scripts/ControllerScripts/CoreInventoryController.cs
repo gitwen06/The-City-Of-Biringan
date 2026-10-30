@@ -23,6 +23,7 @@ public class CoreInventoryController : MonoBehaviour
 
     public static CoreInventoryController instance; //singleton 
     private bool isMainInventoryOpen = false;
+    private bool isBusy = false; //avoid switching for events(e.g., dialogue, fishing);
 
     private InputSystem_Actions inputActions;
 
@@ -134,6 +135,7 @@ public class CoreInventoryController : MonoBehaviour
     private void OnSelectSlot(InputAction.CallbackContext context)
     {
         if (!Toolbar.activeInHierarchy) { return; }
+        if (isBusy) { return; } //if busy dont allow switching
 
         string inputName = context.control.name;
         int inputNameInt = int.Parse(inputName); //convert "1" to 1
@@ -372,5 +374,10 @@ public class CoreInventoryController : MonoBehaviour
         }
 
         UpdateInventoryUI(); 
+    }
+
+    public void SetIsBusy()
+    {
+        isBusy = true; //called by other functions (e.g., fishing i guess)
     }
 }
